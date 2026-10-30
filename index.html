@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Xtikgram Downloader - HD No Watermark</title>
+    <title>Xtikgram Downloader - Premium Edition</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -13,8 +13,16 @@
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #08080a;
-            color: #f8fafc;
+            /* Latar Belakang Putih dengan Mesh Gradient RGB Blur Segar */
+            background-color: #ffffff;
+            background-image: 
+                radial-gradient(at 10% 0%, hsla(189,100%,76%,0.4) 0px, transparent 50%),
+                radial-gradient(at 90% 10%, hsla(340,100%,86%,0.5) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, hsla(28,100%,84%,0.4) 0px, transparent 50%),
+                radial-gradient(at 10% 90%, hsla(355,100%,88%,0.5) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, hsla(150,100%,80%,0.4) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #1e293b;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
             overflow-x: hidden;
@@ -29,46 +37,49 @@
             width: 100%;
             max-width: 420px;
             min-height: 100vh;
-            background-color: #0a0a0c;
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             padding: 16px 20px 120px 20px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
         }
 
         @media (min-width: 640px) {
             .app-container {
                 min-height: 850px;
                 border-radius: 40px;
-                border: 1px solid rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.6);
+                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+                background: rgba(255, 255, 255, 0.2);
             }
         }
 
+        /* Light Glassmorphism Card */
         .glass-card {
-            background: rgba(25, 27, 35, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
         }
 
+        /* Light Glassmorphism Dock Bar */
         .glass-dock {
-            background: rgba(20, 22, 30, 0.65);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
             touch-action: none;
         }
 
-        /* Pure Liquid Glass Styling ala HyperOS/iOS */
+        /* Pill Indikator Kaca Bening */
         .pure-liquid-pill {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.6), inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 1);
             transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), left 0.45s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
@@ -77,13 +88,8 @@
             transition: transform 0.1s ease;
         }
 
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.1); border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -91,12 +97,11 @@
     <div class="app-container">
         <!-- HEADER -->
         <header class="w-full text-center py-3 z-10">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-600 shadow-lg shadow-orange-500/25 mb-3 relative">
-                <i class="fa-brands fa-tiktok text-3xl text-white drop-shadow-[2px_2px_0px_#000]"></i>
-                <div class="absolute inset-0 rounded-2xl border border-orange-300/40 animate-pulse pointer-events-none"></div>
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-orange-400 to-amber-500 shadow-lg shadow-orange-500/30 mb-3 relative">
+                <i class="fa-brands fa-tiktok text-3xl text-white drop-shadow-[1px_1px_0px_#000]"></i>
             </div>
-            <h1 class="text-2xl font-bold tracking-tight text-white">Xtikgram</h1>
-            <p class="text-xs text-slate-400 mt-0.5">TikTok & Instagram HD Downloader</p>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-800">Xtikgram</h1>
+            <p class="text-xs text-slate-500 mt-0.5 font-medium">TikTok & Instagram HD Downloader</p>
         </header>
 
         <!-- MAIN CONTAINER -->
@@ -104,32 +109,32 @@
             
             <!-- TAB 1: HOME -->
             <div id="tabHome" class="space-y-4">
-                <div class="glass-card rounded-3xl p-5 shadow-xl space-y-4">
-                    <div class="grid grid-cols-2 gap-2 p-1 bg-slate-900/60 rounded-2xl border border-white/5">
-                        <button onclick="setPlatform('tiktok')" id="platTikTok" class="py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center space-x-2 transition-all bg-orange-600 text-white shadow-md ios-active">
+                <div class="glass-card rounded-3xl p-5 space-y-4">
+                    <div class="grid grid-cols-2 gap-2 p-1 bg-white/40 rounded-2xl border border-white/60 shadow-inner">
+                        <button onclick="setPlatform('tiktok')" id="platTikTok" class="py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition-all bg-orange-500 text-white shadow-md ios-active">
                             <i class="fa-brands fa-tiktok"></i>
                             <span>TikTok</span>
                         </button>
-                        <button onclick="setPlatform('instagram')" id="platIg" class="py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center space-x-2 transition-all text-slate-400 hover:text-white ios-active">
+                        <button onclick="setPlatform('instagram')" id="platIg" class="py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition-all text-slate-500 hover:text-slate-800 ios-active">
                             <i class="fa-brands fa-instagram"></i>
                             <span>Instagram</span>
                         </button>
                     </div>
 
                     <div class="space-y-2">
-                        <label id="inputLabel" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Paste Link TikTok Disini</label>
+                        <label id="inputLabel" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Paste Link TikTok Disini</label>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
                                 <i class="fa-solid fa-link text-xs"></i>
                             </span>
-                            <input type="text" id="urlInput" placeholder="https://vt.tiktok.com/..." class="w-full pl-10 pr-10 py-3.5 bg-slate-900/90 border border-slate-700/80 rounded-2xl text-xs focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition text-slate-200">
-                            <button onclick="clearInput()" id="clearBtn" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-white hidden ios-active">
+                            <input type="text" id="urlInput" placeholder="https://vt.tiktok.com/..." class="w-full pl-10 pr-10 py-3.5 bg-white/60 border border-white/80 rounded-2xl text-xs focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 transition text-slate-800 placeholder-slate-400 shadow-sm">
+                            <button onclick="clearInput()" id="clearBtn" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-700 hidden ios-active">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
                     </div>
 
-                    <button onclick="processDownload()" id="actionBtn" class="w-full py-3.5 px-4 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-semibold rounded-2xl shadow-lg shadow-orange-500/25 transition flex items-center justify-center space-x-2 text-xs ios-active">
+                    <button onclick="processDownload()" id="actionBtn" class="w-full py-3.5 px-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-2xl shadow-lg shadow-orange-500/30 transition flex items-center justify-center space-x-2 text-xs ios-active">
                         <i class="fa-solid fa-bolt"></i>
                         <span id="btnText">Proses Konten</span>
                     </button>
@@ -137,41 +142,41 @@
 
                 <div id="loadingBox" class="text-center py-6 hidden">
                     <div class="inline-block w-7 h-7 border-3 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-                    <p id="loadingText" class="text-xs text-slate-400 mt-2">Mengekstrak data dari server...</p>
+                    <p id="loadingText" class="text-xs font-semibold text-slate-600 mt-2">Menghubungkan ke server...</p>
                 </div>
             </div>
 
             <!-- TAB 2: DOWNLOAD -->
             <div id="tabDownload" class="space-y-4 hidden">
-                <div class="glass-card rounded-3xl p-5 shadow-xl space-y-4 border border-orange-500/30">
+                <div class="glass-card rounded-3xl p-5 space-y-4 border border-orange-400/20">
                     <div class="flex items-center space-x-3">
-                        <img id="mediaThumb" src="" alt="Thumbnail" class="w-16 h-20 object-cover rounded-xl bg-slate-800 border border-white/10">
+                        <img id="mediaThumb" src="" alt="Thumbnail" class="w-16 h-20 object-cover rounded-xl bg-white shadow-sm border border-white">
                         <div class="overflow-hidden flex-1">
-                            <p id="mediaAuthor" class="text-xs font-semibold text-orange-400 truncate">@kinn</p>
-                            <p id="mediaDesc" class="text-xs text-slate-300 line-clamp-2 mt-1">Konten siap diunduh</p>
+                            <p id="mediaAuthor" class="text-xs font-bold text-orange-600 truncate">@kinn</p>
+                            <p id="mediaDesc" class="text-xs text-slate-600 line-clamp-2 mt-1 font-medium">Konten siap diunduh</p>
                         </div>
                     </div>
                     
                     <div id="downloadActionList" class="space-y-2 pt-1 max-h-60 overflow-y-auto pr-1"></div>
                 </div>
-                <p class="text-center text-[10px] text-slate-500">Geser dock ke Home untuk memproses link baru.</p>
+                <p class="text-center text-[10px] font-semibold text-slate-500">Geser dock ke Home untuk memproses link baru.</p>
             </div>
 
             <!-- TAB 3: ABOUT -->
             <div id="tabAbout" class="space-y-4 hidden">
-                <div class="glass-card rounded-3xl p-6 shadow-xl space-y-4 text-center">
-                    <div class="w-14 h-14 mx-auto rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400 text-2xl">
+                <div class="glass-card rounded-3xl p-6 space-y-4 text-center">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-orange-100 border border-orange-200 flex items-center justify-center text-orange-500 text-2xl shadow-inner">
                         <i class="fa-solid fa-shield-halved"></i>
                     </div>
                     <div>
-                        <h2 class="text-base font-bold text-white">Xtikgram Downloader</h2>
-                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-                            Engine downloader stabil untuk bahan editan JJ & video tanpa watermark. UI Pure Liquid Glass.
+                        <h2 class="text-base font-bold text-slate-800">Xtikgram Downloader</h2>
+                        <p class="text-xs text-slate-600 mt-1 font-medium leading-relaxed">
+                            Engine eksklusif untuk bahan editan tanpa watermark. Tampilan segar dengan Liquid Glass Light Mode.
                         </p>
                     </div>
-                    <div class="pt-2 border-t border-white/5">
-                        <p class="text-xs text-slate-400 mb-2">Developer:</p>
-                        <a href="https://instagram.com/kinn" target="_blank" class="inline-flex items-center space-x-2 py-2 px-4 rounded-xl bg-gradient-to-r from-pink-600 via-orange-600 to-amber-600 text-white text-xs font-semibold shadow-lg shadow-orange-500/20 ios-active">
+                    <div class="pt-2 border-t border-slate-200/50">
+                        <p class="text-xs font-bold text-slate-500 mb-2">Developer:</p>
+                        <a href="https://instagram.com/kinn" target="_blank" class="inline-flex items-center space-x-2 py-2.5 px-5 rounded-xl bg-gradient-to-r from-pink-500 via-orange-500 to-amber-500 text-white text-xs font-bold shadow-lg shadow-orange-500/20 ios-active">
                             <i class="fa-brands fa-instagram text-sm"></i>
                             <span>Instagram: @kinn</span>
                         </a>
@@ -181,27 +186,28 @@
 
         </main>
 
-        <!-- DOCK BAR (Interactive Drag) -->
+        <!-- DOCK BAR PURE LIQUID GLASS (LIGHT MODE) -->
         <nav id="dockContainer" class="absolute bottom-6 left-5 right-5 max-w-[340px] mx-auto glass-dock rounded-full p-1.5 z-50 flex items-center justify-around select-none">
             <div id="dockIndicator" class="absolute top-1.5 bottom-1.5 w-[32%] pure-liquid-pill rounded-full pointer-events-none left-[2%] z-0"></div>
 
-            <button onclick="switchTab('home')" id="navHome" class="relative z-10 w-[32%] py-3 flex flex-col items-center justify-center text-white transition-all ios-active">
+            <button onclick="switchTab('home')" id="navHome" class="relative z-10 w-[32%] py-3 flex flex-col items-center justify-center text-orange-600 transition-all ios-active">
                 <i class="fa-solid fa-house text-sm"></i>
-                <span class="text-[10px] font-medium mt-0.5">Home</span>
+                <span class="text-[10px] font-bold mt-0.5">Home</span>
             </button>
 
             <button onclick="switchTab('download')" id="navDownload" class="relative z-10 w-[32%] py-3 flex flex-col items-center justify-center text-slate-400 transition-all ios-active opacity-50 cursor-not-allowed">
                 <i class="fa-solid fa-cloud-arrow-down text-sm"></i>
-                <span class="text-[10px] font-medium mt-0.5">Download</span>
+                <span class="text-[10px] font-bold mt-0.5">Download</span>
             </button>
 
             <button onclick="switchTab('about')" id="navAbout" class="relative z-10 w-[32%] py-3 flex flex-col items-center justify-center text-slate-400 transition-all ios-active">
                 <i class="fa-solid fa-circle-info text-sm"></i>
-                <span class="text-[10px] font-medium mt-0.5">About</span>
+                <span class="text-[10px] font-bold mt-0.5">About</span>
             </button>
         </nav>
     </div>
 
+    <!-- SCRIPT LOGIC -->
     <script>
         let currentPlatform = 'tiktok';
         let isDataReady = false;
@@ -239,13 +245,13 @@
             const inputLabel = document.getElementById('inputLabel');
 
             if (plat === 'tiktok') {
-                btnTiktok.className = "py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center space-x-2 transition-all bg-orange-600 text-white shadow-md ios-active";
-                btnIg.className = "py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center space-x-2 transition-all text-slate-400 hover:text-white ios-active";
+                btnTiktok.className = "py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition-all bg-orange-500 text-white shadow-md ios-active";
+                btnIg.className = "py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition-all text-slate-500 hover:text-slate-800 ios-active";
                 inputLabel.innerText = "Paste Link TikTok Disini";
                 urlInput.placeholder = "https://vt.tiktok.com/...";
             } else {
-                btnIg.className = "py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center space-x-2 transition-all bg-orange-600 text-white shadow-md ios-active";
-                btnTiktok.className = "py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center space-x-2 transition-all text-slate-400 hover:text-white ios-active";
+                btnIg.className = "py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition-all bg-orange-500 text-white shadow-md ios-active";
+                btnTiktok.className = "py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition-all text-slate-500 hover:text-slate-800 ios-active";
                 inputLabel.innerText = "Paste Link Instagram (Reels/Foto/Carousel)";
                 urlInput.placeholder = "https://www.instagram.com/p/...";
             }
@@ -257,7 +263,7 @@
             if (tabName === 'about') targetIdx = 2;
 
             if (targetIdx === 1 && !isDataReady) {
-                alert('Silakan masukkan link dan proses konten terlebih dahulu!');
+                alert('Silakan proses konten terlebih dahulu!');
                 return;
             }
 
@@ -271,29 +277,29 @@
             tabAbout.classList.add('hidden');
 
             [navHome, navDownload, navAbout].forEach(nav => {
-                nav.classList.remove('text-white');
+                nav.classList.remove('text-orange-600');
                 nav.classList.add('text-slate-400');
             });
 
             if (currentTabIdx === 0) {
                 tabHome.classList.remove('hidden');
                 navHome.classList.remove('text-slate-400');
-                navHome.classList.add('text-white');
+                navHome.classList.add('text-orange-600');
                 dockIndicator.style.left = '2%';
             } else if (currentTabIdx === 1) {
                 tabDownload.classList.remove('hidden');
                 navDownload.classList.remove('text-slate-400');
-                navDownload.classList.add('text-white');
+                navDownload.classList.add('text-orange-600');
                 dockIndicator.style.left = '34%';
             } else if (currentTabIdx === 2) {
                 tabAbout.classList.remove('hidden');
                 navAbout.classList.remove('text-slate-400');
-                navAbout.classList.add('text-white');
+                navAbout.classList.add('text-orange-600');
                 dockIndicator.style.left = '66%';
             }
         }
 
-        // TOUCH & DRAG GESTURE (Mulus & Kenyal)
+        // TOUCH & DRAG GESTURE
         let startX = 0;
         let currentX = 0;
         let isDragging = false;
@@ -335,11 +341,45 @@
             updateTabDisplay();
         });
 
-        // ENGINE DOWNLOADER FINAL (Tanpa Proxy Rewel & Ada Fallback System)
+        // FUNGSI RENAME FILE DOWNLOAD EXCLUSIVE (Xtik / xinsta)
+        async function forceDownloadName(url, prefix, ext, btnElement) {
+            const originalContent = btnElement.innerHTML;
+            btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Mengunduh...</span>`;
+            
+            try {
+                // Generate format nama: Xtik_9283.mp4 / xinsta_1234.jpg
+                const randomId = Math.floor(1000 + Math.random() * 9000);
+                const fileName = `${prefix}_${randomId}.${ext}`;
+
+                // Fetch data video/foto sebagai blob untuk bypass nama default
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("CORS Block");
+                
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(blobUrl);
+
+            } catch (err) {
+                console.log("CORS mencegah rename, membuka di tab baru...");
+                // Fallback jika API memblokir fungsi fetch rename
+                window.open(url, '_blank');
+            } finally {
+                btnElement.innerHTML = originalContent;
+            }
+        }
+
+        // ENGINE DOWNLOADER API 
         async function processDownload() {
             const url = urlInput.value.trim();
             if (!url) {
-                alert('Link tidak boleh kosong bro!');
+                alert('Patenkan linknya dulu bro!');
                 return;
             }
 
@@ -350,7 +390,6 @@
 
             try {
                 if (currentPlatform === 'tiktok') {
-                    // Tembak langsung (Direct Fetch) ke tikwm tanpa proxy karena sudah support CORS asli
                     const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
                     const json = await res.json();
 
@@ -362,28 +401,27 @@
 
                         if (data.images && data.images.length > 0) {
                             data.images.forEach((img, idx) => {
-                                actionList.innerHTML += `<a href="${img}" target="_blank" class="w-full py-2.5 px-4 bg-orange-600 hover:bg-orange-700 text-white font-medium text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-image"></i><span>Download Foto ${idx + 1}</span></a>`;
+                                actionList.innerHTML += `<button onclick="forceDownloadName('${img}', 'Xtik', 'jpg', this)" class="w-full py-2.5 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-image"></i><span>Download Foto ${idx + 1} (Xtik)</span></button>`;
                             });
                         } else {
                             actionList.innerHTML = `
-                                <a href="${data.play}" target="_blank" class="w-full py-3 px-4 bg-orange-600 hover:bg-orange-700 text-white font-medium text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-video"></i><span>Download Video HD</span></a>
-                                <a href="${data.music}" target="_blank" class="w-full py-3 px-4 bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 text-white font-medium text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-music"></i><span>Download Audio MP3</span></a>
+                                <button onclick="forceDownloadName('${data.play}', 'Xtik', 'mp4', this)" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-video"></i><span>Download Video HD (Xtik)</span></button>
+                                <a href="${data.music}" target="_blank" class="w-full py-3 px-4 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-music"></i><span>Download Audio MP3</span></a>
                             `;
                         }
                     } else {
-                        throw new Error('Link TikTok tidak valid atau server sedang sibuk.');
+                        throw new Error('Link TikTok tidak valid.');
                     }
 
                 } else {
-                    // INSTAGRAM SYSTEM: API Ganda (Fallback Mode)
-                    loadingText.innerText = "Mencari server Instagram yang aktif...";
+                    loadingText.innerText = "Mencari server Instagram...";
                     let success = false;
                     let igData = null;
 
-                    // Daftar API Publik untuk Instagram
+                    // Menggunakan Endpoint API Bot Community Terpercaya
                     const igApis = [
-                        `https://api.vreden.web.id/api/igdownload?url=${encodeURIComponent(url)}`,
-                        `https://api.aemt.me/download/igdl?url=${encodeURIComponent(url)}`
+                        `https://api.siputzx.my.id/api/d/igdl?url=${encodeURIComponent(url)}`,
+                        `https://api.agatz.xyz/api/instagram?url=${encodeURIComponent(url)}`
                     ];
 
                     for (let endpoint of igApis) {
@@ -391,46 +429,40 @@
                             const res = await fetch(endpoint);
                             const json = await res.json();
                             
-                            // Deteksi struktur data dari masing-masing API
-                            if (json.result || json.url || (json.data && json.data.length > 0)) {
+                            if (json.data && json.data.length > 0) {
                                 igData = json;
                                 success = true;
-                                break; // Berhenti mencari jika sukses
+                                break; 
                             }
-                        } catch (err) {
-                            console.log("Mencoba server cadangan...");
-                        }
+                        } catch (err) {}
                     }
 
                     if (success && igData) {
-                        let mediaItems = [];
-                        if (Array.isArray(igData.result)) mediaItems = igData.result.map(i => i.url || i);
-                        else if (Array.isArray(igData.data)) mediaItems = igData.data.map(i => i.url || i);
-                        else if (igData.result) mediaItems = [igData.result];
-                        else if (igData.url) mediaItems = [igData.url];
+                        let mediaItems = Array.isArray(igData.data) ? igData.data : [igData.data];
 
-                        document.getElementById('mediaThumb').src = mediaItems[0] || 'https://via.placeholder.com/150';
+                        document.getElementById('mediaThumb').src = mediaItems[0].url || mediaItems[0] || 'https://via.placeholder.com/150';
                         document.getElementById('mediaAuthor').innerText = `@instagram_user`;
                         document.getElementById('mediaDesc').innerText = 'Instagram Content (Reels/Foto)';
 
-                        mediaItems.forEach((mediaUrl, idx) => {
-                            let isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video') || url.includes('/reel/');
-                            let label = isVideo ? `Download Video / Reels ${mediaItems.length > 1 ? idx + 1 : ''}` : `Download Foto ${mediaItems.length > 1 ? idx + 1 : ''}`;
+                        mediaItems.forEach((item, idx) => {
+                            let mediaUrl = item.url || item;
+                            let isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video');
+                            let label = isVideo ? `Download Video ${mediaItems.length > 1 ? idx + 1 : ''}` : `Download Foto ${mediaItems.length > 1 ? idx + 1 : ''}`;
                             let icon = isVideo ? 'fa-video' : 'fa-image';
+                            let ext = isVideo ? 'mp4' : 'jpg';
                             
                             actionList.innerHTML += `
-                                <a href="${mediaUrl}" target="_blank" class="w-full py-3 px-4 bg-orange-600 hover:bg-orange-700 text-white font-medium text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
+                                <button onclick="forceDownloadName('${mediaUrl}', 'xinsta', '${ext}', this)" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
                                     <i class="fa-solid ${icon}"></i>
-                                    <span>${label}</span>
-                                </a>
+                                    <span>${label} (xinsta)</span>
+                                </button>
                             `;
                         });
                     } else {
-                        throw new Error('Semua server Instagram publik saat ini sedang gangguan. Coba beberapa saat lagi.');
+                        throw new Error('Semua server Instagram publik sedang sibuk, coba beberapa detik lagi.');
                     }
                 }
 
-                // Jika sukses, buka tab download
                 isDataReady = true;
                 navDownload.classList.remove('opacity-50', 'cursor-not-allowed');
                 currentTabIdx = 1;
@@ -438,10 +470,10 @@
 
             } catch (error) {
                 console.error(error);
-                alert(error.message || 'Gagal tersambung ke server. Periksa koneksi atau coba sesaat lagi.');
+                alert(error.message || 'Gagal tersambung ke server. Periksa link lu.');
             } finally {
                 loadingBox.classList.add('hidden');
-                loadingText.innerText = "Mengekstrak data dari server...";
+                loadingText.innerText = "Menghubungkan ke server...";
             }
         }
     </script>
