@@ -62,6 +62,7 @@
             touch-action: none;
         }
 
+        /* Pure Liquid Glass Styling ala HyperOS/iOS */
         .pure-liquid-pill {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(12px);
@@ -88,14 +89,14 @@
 <body>
 
     <div class="app-container">
-        <!-- HEADER / LOGO -->
+        <!-- HEADER -->
         <header class="w-full text-center py-3 z-10">
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-600 shadow-lg shadow-orange-500/25 mb-3 relative">
                 <i class="fa-brands fa-tiktok text-3xl text-white drop-shadow-[2px_2px_0px_#000]"></i>
                 <div class="absolute inset-0 rounded-2xl border border-orange-300/40 animate-pulse pointer-events-none"></div>
             </div>
             <h1 class="text-2xl font-bold tracking-tight text-white">Xtikgram</h1>
-            <p class="text-xs text-slate-400 mt-0.5">TikTok & Instagram Downloader (Video & Foto)</p>
+            <p class="text-xs text-slate-400 mt-0.5">TikTok & Instagram HD Downloader</p>
         </header>
 
         <!-- MAIN CONTAINER -->
@@ -136,7 +137,7 @@
 
                 <div id="loadingBox" class="text-center py-6 hidden">
                     <div class="inline-block w-7 h-7 border-3 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-                    <p class="text-xs text-slate-400 mt-2">Sedang mengambil data video / foto...</p>
+                    <p id="loadingText" class="text-xs text-slate-400 mt-2">Mengekstrak data dari server...</p>
                 </div>
             </div>
 
@@ -146,14 +147,14 @@
                     <div class="flex items-center space-x-3">
                         <img id="mediaThumb" src="" alt="Thumbnail" class="w-16 h-20 object-cover rounded-xl bg-slate-800 border border-white/10">
                         <div class="overflow-hidden flex-1">
-                            <p id="mediaAuthor" class="text-xs font-semibold text-orange-400 truncate">@username</p>
-                            <p id="mediaDesc" class="text-xs text-slate-300 line-clamp-2 mt-1">Keterangan...</p>
+                            <p id="mediaAuthor" class="text-xs font-semibold text-orange-400 truncate">@kinn</p>
+                            <p id="mediaDesc" class="text-xs text-slate-300 line-clamp-2 mt-1">Konten siap diunduh</p>
                         </div>
                     </div>
                     
                     <div id="downloadActionList" class="space-y-2 pt-1 max-h-60 overflow-y-auto pr-1"></div>
                 </div>
-                <p class="text-center text-[10px] text-slate-500">Konten siap diunduh. Geser dock ke Home untuk link baru.</p>
+                <p class="text-center text-[10px] text-slate-500">Geser dock ke Home untuk memproses link baru.</p>
             </div>
 
             <!-- TAB 3: ABOUT -->
@@ -165,11 +166,11 @@
                     <div>
                         <h2 class="text-base font-bold text-white">Xtikgram Downloader</h2>
                         <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-                            Web downloader modern untuk video & foto tanpa watermark dengan performa tinggi & antarmuka Pure Liquid Glass.
+                            Engine downloader stabil untuk bahan editan JJ & video tanpa watermark. UI Pure Liquid Glass.
                         </p>
                     </div>
                     <div class="pt-2 border-t border-white/5">
-                        <p class="text-xs text-slate-400 mb-2">Developer Sosial Media:</p>
+                        <p class="text-xs text-slate-400 mb-2">Developer:</p>
                         <a href="https://instagram.com/kinn" target="_blank" class="inline-flex items-center space-x-2 py-2 px-4 rounded-xl bg-gradient-to-r from-pink-600 via-orange-600 to-amber-600 text-white text-xs font-semibold shadow-lg shadow-orange-500/20 ios-active">
                             <i class="fa-brands fa-instagram text-sm"></i>
                             <span>Instagram: @kinn</span>
@@ -180,7 +181,7 @@
 
         </main>
 
-        <!-- DOCK BAR PURE LIQUID GLASS -->
+        <!-- DOCK BAR (Interactive Drag) -->
         <nav id="dockContainer" class="absolute bottom-6 left-5 right-5 max-w-[340px] mx-auto glass-dock rounded-full p-1.5 z-50 flex items-center justify-around select-none">
             <div id="dockIndicator" class="absolute top-1.5 bottom-1.5 w-[32%] pure-liquid-pill rounded-full pointer-events-none left-[2%] z-0"></div>
 
@@ -201,7 +202,6 @@
         </nav>
     </div>
 
-    <!-- SCRIPT LOGIC -->
     <script>
         let currentPlatform = 'tiktok';
         let isDataReady = false;
@@ -210,6 +210,7 @@
         const urlInput = document.getElementById('urlInput');
         const clearBtn = document.getElementById('clearBtn');
         const loadingBox = document.getElementById('loadingBox');
+        const loadingText = document.getElementById('loadingText');
         
         const tabHome = document.getElementById('tabHome');
         const tabDownload = document.getElementById('tabDownload');
@@ -256,7 +257,7 @@
             if (tabName === 'about') targetIdx = 2;
 
             if (targetIdx === 1 && !isDataReady) {
-                alert('Silakan masukkan link dan proses konten terlebih dahulu di tab Home!');
+                alert('Silakan masukkan link dan proses konten terlebih dahulu!');
                 return;
             }
 
@@ -292,6 +293,7 @@
             }
         }
 
+        // TOUCH & DRAG GESTURE (Mulus & Kenyal)
         let startX = 0;
         let currentX = 0;
         let isDragging = false;
@@ -306,18 +308,12 @@
             if (!isDragging) return;
             currentX = e.touches[0].clientX;
             let diffX = currentX - startX;
-            
-            let baseLeft = 2;
-            if (currentTabIdx === 1) baseLeft = 34;
-            if (currentTabIdx === 2) baseLeft = 66;
-
-            let containerWidth = dockContainer.offsetWidth;
-            let movePercent = (diffX / containerWidth) * 100;
+            let baseLeft = currentTabIdx === 0 ? 2 : (currentTabIdx === 1 ? 34 : 66);
+            let movePercent = (diffX / dockContainer.offsetWidth) * 100;
             let newPos = baseLeft + movePercent;
-
+            
             if (newPos < -2) newPos = -2;
             if (newPos > 70) newPos = 70;
-
             dockIndicator.style.left = newPos + '%';
         });
 
@@ -325,120 +321,127 @@
             if (!isDragging) return;
             isDragging = false;
             dockIndicator.style.transition = 'all 0.45s cubic-bezier(0.25, 1, 0.5, 1)';
-
-            let endX = e.changedTouches[0].clientX;
-            let diffX = endX - startX;
-
+            
+            let diffX = e.changedTouches[0].clientX - startX;
             if (diffX > 30) {
-                if (currentTabIdx === 0) {
-                    if (isDataReady) currentTabIdx = 1;
-                    else currentTabIdx = 2;
-                } else if (currentTabIdx === 1) {
-                    currentTabIdx = 2;
-                }
+                if (currentTabIdx === 0) currentTabIdx = isDataReady ? 1 : 2;
+                else if (currentTabIdx === 1) currentTabIdx = 2;
             } else if (diffX < -30) {
-                if (currentTabIdx === 2) {
-                    if (isDataReady) currentTabIdx = 1;
-                    else currentTabIdx = 0;
-                } else if (currentTabIdx === 1) {
-                    currentTabIdx = 0;
-                }
+                if (currentTabIdx === 2) currentTabIdx = isDataReady ? 1 : 0;
+                else if (currentTabIdx === 1) currentTabIdx = 0;
             }
 
-            if (currentTabIdx === 1 && !isDataReady) {
-                currentTabIdx = diffX > 30 ? 2 : 0;
-            }
-
+            if (currentTabIdx === 1 && !isDataReady) currentTabIdx = diffX > 30 ? 2 : 0;
             updateTabDisplay();
         });
 
-        // FUNGSI API ASLI (BUKAN SIMULASI LAGI)
+        // ENGINE DOWNLOADER FINAL (Tanpa Proxy Rewel & Ada Fallback System)
         async function processDownload() {
             const url = urlInput.value.trim();
             if (!url) {
-                alert('Link tidak boleh kosong!');
+                alert('Link tidak boleh kosong bro!');
                 return;
             }
 
             loadingBox.classList.remove('hidden');
+            loadingText.innerText = "Mengekstrak data dari server...";
+            const actionList = document.getElementById('downloadActionList');
+            actionList.innerHTML = '';
 
             try {
-                let targetApi = '';
                 if (currentPlatform === 'tiktok') {
-                    targetApi = `https://tikwm.com/api/?url=${encodeURIComponent(url)}`;
-                } else {
-                    targetApi = `https://apis.davidcyriltech.my.id/instagram?url=${encodeURIComponent(url)}`;
-                }
+                    // Tembak langsung (Direct Fetch) ke tikwm tanpa proxy karena sudah support CORS asli
+                    const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
+                    const json = await res.json();
 
-                // CORS Proxy untuk keamanan saat deploy
-                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetApi)}`;
-                const response = await fetch(proxyUrl);
-                const json = await response.json();
+                    if (json.code === 0 && json.data) {
+                        const data = json.data;
+                        document.getElementById('mediaThumb').src = data.cover || 'https://via.placeholder.com/150';
+                        document.getElementById('mediaAuthor').innerText = `@${data.author?.unique_id || 'tiktok_user'}`;
+                        document.getElementById('mediaDesc').innerText = data.title || 'TikTok Content (No Watermark)';
 
-                const actionList = document.getElementById('downloadActionList');
-                actionList.innerHTML = '';
-
-                if (currentPlatform === 'tiktok' && json.code === 0 && json.data) {
-                    const data = json.data;
-                    document.getElementById('mediaThumb').src = data.cover || 'https://via.placeholder.com/150';
-                    document.getElementById('mediaAuthor').innerText = `@${data.author?.unique_id || 'tiktok_user'}`;
-                    document.getElementById('mediaDesc').innerText = data.title || 'TikTok Video';
-
-                    if (data.images && data.images.length > 0) {
-                        data.images.forEach((img, idx) => {
-                            actionList.innerHTML += `<a href="${img}" target="_blank" class="w-full py-2.5 px-4 bg-orange-600 hover:bg-orange-700 text-white font-medium text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-image"></i><span>Download Foto ${idx + 1}</span></a>`;
-                        });
+                        if (data.images && data.images.length > 0) {
+                            data.images.forEach((img, idx) => {
+                                actionList.innerHTML += `<a href="${img}" target="_blank" class="w-full py-2.5 px-4 bg-orange-600 hover:bg-orange-700 text-white font-medium text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-image"></i><span>Download Foto ${idx + 1}</span></a>`;
+                            });
+                        } else {
+                            actionList.innerHTML = `
+                                <a href="${data.play}" target="_blank" class="w-full py-3 px-4 bg-orange-600 hover:bg-orange-700 text-white font-medium text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-video"></i><span>Download Video HD</span></a>
+                                <a href="${data.music}" target="_blank" class="w-full py-3 px-4 bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 text-white font-medium text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-music"></i><span>Download Audio MP3</span></a>
+                            `;
+                        }
                     } else {
-                        actionList.innerHTML = `
-                            <a href="${data.play}" target="_blank" class="w-full py-3 px-4 bg-orange-600 hover:bg-orange-700 text-white font-medium text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-video"></i><span>Download Video HD</span></a>
-                            <a href="${data.music}" target="_blank" class="w-full py-3 px-4 bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 text-white font-medium text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-music"></i><span>Download Audio MP3</span></a>
-                        `;
+                        throw new Error('Link TikTok tidak valid atau server sedang sibuk.');
                     }
 
-                    isDataReady = true;
-                    navDownload.classList.remove('opacity-50', 'cursor-not-allowed');
-                    currentTabIdx = 1;
-                    updateTabDisplay();
-
-                } else if (currentPlatform === 'instagram' && (json.success || json.download_url || json.video_url)) {
-                    // Penanganan Struktur Data Instagram
-                    let mediaItems = [];
-                    if (Array.isArray(json.download_url)) mediaItems = json.download_url;
-                    else if (json.download_url) mediaItems = [json.download_url];
-                    else if (json.video_url) mediaItems = [json.video_url];
-                    else if (json.url) mediaItems = [json.url];
-                    
-                    document.getElementById('mediaThumb').src = mediaItems[0] || 'https://via.placeholder.com/150';
-                    document.getElementById('mediaAuthor').innerText = `@instagram_user`;
-                    document.getElementById('mediaDesc').innerText = json.caption || 'Instagram Post / Reels';
-
-                    mediaItems.forEach((mediaUrl, idx) => {
-                        // Deteksi video: cek apakah ada reel di input atau url hasil mengandung mp4
-                        let isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video') || url.includes('/reel/');
-                        let label = isVideo ? `Download Video / Reels ${mediaItems.length > 1 ? idx + 1 : ''}` : `Download Foto ${mediaItems.length > 1 ? idx + 1 : ''}`;
-                        let icon = isVideo ? 'fa-video' : 'fa-image';
-                        
-                        actionList.innerHTML += `
-                            <a href="${mediaUrl}" target="_blank" class="w-full py-3 px-4 bg-orange-600 hover:bg-orange-700 text-white font-medium text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
-                                <i class="fa-solid ${icon}"></i>
-                                <span>${label}</span>
-                            </a>
-                        `;
-                    });
-
-                    isDataReady = true;
-                    navDownload.classList.remove('opacity-50', 'cursor-not-allowed');
-                    currentTabIdx = 1;
-                    updateTabDisplay();
-
                 } else {
-                    alert('Gagal mengambil data. Pastikan link publik dan valid!');
+                    // INSTAGRAM SYSTEM: API Ganda (Fallback Mode)
+                    loadingText.innerText = "Mencari server Instagram yang aktif...";
+                    let success = false;
+                    let igData = null;
+
+                    // Daftar API Publik untuk Instagram
+                    const igApis = [
+                        `https://api.vreden.web.id/api/igdownload?url=${encodeURIComponent(url)}`,
+                        `https://api.aemt.me/download/igdl?url=${encodeURIComponent(url)}`
+                    ];
+
+                    for (let endpoint of igApis) {
+                        try {
+                            const res = await fetch(endpoint);
+                            const json = await res.json();
+                            
+                            // Deteksi struktur data dari masing-masing API
+                            if (json.result || json.url || (json.data && json.data.length > 0)) {
+                                igData = json;
+                                success = true;
+                                break; // Berhenti mencari jika sukses
+                            }
+                        } catch (err) {
+                            console.log("Mencoba server cadangan...");
+                        }
+                    }
+
+                    if (success && igData) {
+                        let mediaItems = [];
+                        if (Array.isArray(igData.result)) mediaItems = igData.result.map(i => i.url || i);
+                        else if (Array.isArray(igData.data)) mediaItems = igData.data.map(i => i.url || i);
+                        else if (igData.result) mediaItems = [igData.result];
+                        else if (igData.url) mediaItems = [igData.url];
+
+                        document.getElementById('mediaThumb').src = mediaItems[0] || 'https://via.placeholder.com/150';
+                        document.getElementById('mediaAuthor').innerText = `@instagram_user`;
+                        document.getElementById('mediaDesc').innerText = 'Instagram Content (Reels/Foto)';
+
+                        mediaItems.forEach((mediaUrl, idx) => {
+                            let isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video') || url.includes('/reel/');
+                            let label = isVideo ? `Download Video / Reels ${mediaItems.length > 1 ? idx + 1 : ''}` : `Download Foto ${mediaItems.length > 1 ? idx + 1 : ''}`;
+                            let icon = isVideo ? 'fa-video' : 'fa-image';
+                            
+                            actionList.innerHTML += `
+                                <a href="${mediaUrl}" target="_blank" class="w-full py-3 px-4 bg-orange-600 hover:bg-orange-700 text-white font-medium text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
+                                    <i class="fa-solid ${icon}"></i>
+                                    <span>${label}</span>
+                                </a>
+                            `;
+                        });
+                    } else {
+                        throw new Error('Semua server Instagram publik saat ini sedang gangguan. Coba beberapa saat lagi.');
+                    }
                 }
+
+                // Jika sukses, buka tab download
+                isDataReady = true;
+                navDownload.classList.remove('opacity-50', 'cursor-not-allowed');
+                currentTabIdx = 1;
+                updateTabDisplay();
+
             } catch (error) {
                 console.error(error);
-                alert('Terjadi kesalahan jaringan atau server API sedang sibuk.');
+                alert(error.message || 'Gagal tersambung ke server. Periksa koneksi atau coba sesaat lagi.');
             } finally {
                 loadingBox.classList.add('hidden');
+                loadingText.innerText = "Mengekstrak data dari server...";
             }
         }
     </script>
