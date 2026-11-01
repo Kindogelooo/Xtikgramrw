@@ -267,7 +267,6 @@
             clearBtn.classList.add('hidden');
         }
 
-        // FITUR BARU: AUTO PASTE
         async function autoPaste() {
             try {
                 const text = await navigator.clipboard.readText();
@@ -287,12 +286,10 @@
             const btnYt = document.getElementById('platYt');
             const inputLabel = document.getElementById('inputLabel');
 
-            // Reset semua tombol ke abu-abu
             [btnTiktok, btnIg, btnYt].forEach(btn => {
                 btn.className = "py-2.5 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center space-y-1 transition-all text-slate-500 hover:text-slate-800 ios-active";
             });
 
-            // Set tombol aktif menjadi oren & ganti teks
             if (plat === 'tiktok') {
                 btnTiktok.className = "py-2.5 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center space-y-1 transition-all bg-orange-500 text-white shadow-md ios-active";
                 inputLabel.innerText = "Paste Link TikTok Disini";
@@ -350,7 +347,6 @@
             tabSlider.style.transform = `translateX(${targetTranslate})`;
         }
 
-        // TOUCH & DRAG GESTURE DOCKBAR
         let startX = 0, currentX = 0, isDragging = false;
         dockContainer.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
@@ -387,7 +383,6 @@
             updateTabDisplay();
         });
 
-        // FUNGSI RENAME FILE (Xtik / xinsta / xtube)
         async function forceDownloadName(url, prefix, ext, btnElement) {
             const originalContent = btnElement.innerHTML;
             btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Mengunduh...</span>`;
@@ -417,7 +412,6 @@
             }
         }
 
-        // ENGINE DOWNLOADER API (TIKTOK, IG, YOUTUBE)
         async function processDownload() {
             const url = urlInput.value.trim();
             if (!url) {
@@ -455,12 +449,11 @@
                     } else { throw new Error('Link TikTok tidak valid.'); }
                 } 
                 
-                // ================= INSTAGRAM (API LAPIS BAJA BARU) =================
+                // ================= INSTAGRAM =================
                 else if (currentPlatform === 'instagram') {
                     loadingText.innerText = "Menembus server Instagram...";
                     let success = false, igData = null;
 
-                    // Menggunakan API Ryzendesu & Vreden (Lebih Tahan Banting dari SnapInsta)
                     const igApis = [
                         `https://api.ryzendesu.vip/api/downloader/igdl?url=${encodeURIComponent(url)}`,
                         `https://api.vreden.web.id/api/igdownload?url=${encodeURIComponent(url)}`,
@@ -481,8 +474,6 @@
 
                     if (success && igData) {
                         let mediaItems = Array.isArray(igData.data) ? igData.data : (Array.isArray(igData.result) ? igData.result : [igData.url]);
-                        
-                        // Handle format output API Ryzendesu vs Vreden
                         let firstThumb = mediaItems[0].url || mediaItems[0].thumbnail || mediaItems[0];
 
                         document.getElementById('mediaThumb').src = firstThumb || 'https://via.placeholder.com/150';
@@ -506,34 +497,88 @@
                     } else { throw new Error('Semua server Instagram Publik sedang diblokir Cloudflare. Coba 10 detik lagi.'); }
                 }
 
-                // ================= YOUTUBE (FITUR BARU) =================
+                // ================= YOUTUBE (FIXED LENGKAP) =================
                 else if (currentPlatform === 'youtube') {
                     loadingText.innerText = "Mengekstrak resolusi YouTube...";
                     
-                    // Fetch Audio & Video API Ryzendesu secara bersamaan
-                    const [resVid, resAud] = await Promise.all([
-                        fetch(`https://api.ryzendesu.vip/api/downloader/ytmp4?url=${encodeURIComponent(url)}`).then(r => r.json()).catch(()=>null),
-                        fetch(`https://api.ryzendesu.vip/api/downloader/ytmp3?url=${encodeURIComponent(url)}`).then(r => r.json()).catch(()=>null)
-                    ]);
+                    // AUTO-CONVERT LINK youtu.be ke format standar biar server gak pusing
+                    let cleanYtUrl = url;
+                    if (cleanYtUrl.includes('youtu.be/')) {
+                        const vidId = cleanYtUrl.split('youtu.be/')[1].split('?')[0];
+                        cleanYtUrl = `https://www.youtube.com/watch?v=${vidId}`;
+                    }
 
-                    if ((resVid && resVid.url) || (resAud && resAud.url)) {
-                        document.getElementById('mediaThumb').src = resVid?.thumbnail || resAud?.thumbnail || 'https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg';
-                        document.getElementById('mediaAuthor').innerText = `@youtube_creator`;
-                        document.getElementById('mediaDesc').innerText = resVid?.title || resAud?.title || 'YouTube Video';
+                    let ytData = null;
 
-                        // Tombol Resolusi HD (MP4)
-                        if(resVid && resVid.url) {
-                            actionList.innerHTML += `
-                                <a href="${resVid.url}" target="_blank" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
-                                    <i class="fa-solid fa-video"></i>
-                                    <span>Download Video MP4 (HD)</span>
-                                </a>
-                            `;
+                    // SERVER 1: API Siputzx
+                    try {
+                        let res = await fetch(`https://api.siputzx.my.id/api/d/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`);
+                        let json = await res.json();
+                        if (json.data && json.data.dl) {
+                            ytData = {
+                                title: json.data.title || 'YouTube Video',
+                                thumb: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg',
+                                videoUrl: json.data.dl,
+                                audioUrl: null
+                            };
                         }
-                        // Tombol Audio (MP3)
-                        if(resAud && resAud.url) {
+                    } catch(e) {}
+
+                    // SERVER 2: API Vreden (Jika Siputzx gagal)
+                    if (!ytData) {
+                        try {
+                            let res = await fetch(`https://api.vreden.web.id/api/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`);
+                            let json = await res.json();
+                            if (json.result && json.result.download && json.result.download.url) {
+                                 ytData = {
+                                    title: json.result.title || 'YouTube Video',
+                                    thumb: json.result.thumbnail || 'https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg',
+                                    videoUrl: json.result.download.url,
+                                    audioUrl: null
+                                 };
+                            }
+                        } catch(e) {}
+                    }
+
+                    // SERVER 3: API Ryzendesu (Lapis Terakhir)
+                    if (!ytData) {
+                         try {
+                            let res = await fetch(`https://api.ryzendesu.vip/api/downloader/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`);
+                            let json = await res.json();
+                            if (json.url) {
+                                 ytData = {
+                                    title: json.title || 'YouTube Video',
+                                    thumb: json.thumbnail || 'https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg',
+                                    videoUrl: json.url,
+                                    audioUrl: null
+                                 };
+                            }
+                        } catch(e) {}
+                    }
+
+                    // Kalau Video udah tembus, coba tarik Audio-nya juga pakai Siputzx
+                    try {
+                        if (ytData) {
+                             let audRes = await fetch(`https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(cleanYtUrl)}`);
+                             let audJson = await audRes.json();
+                             if (audJson.data && audJson.data.dl) ytData.audioUrl = audJson.data.dl;
+                        }
+                    } catch(e) {}
+
+                    if (ytData && ytData.videoUrl) {
+                        document.getElementById('mediaThumb').src = ytData.thumb;
+                        document.getElementById('mediaAuthor').innerText = `@youtube_creator`;
+                        document.getElementById('mediaDesc').innerText = ytData.title;
+
+                        actionList.innerHTML += `
+                            <a href="${ytData.videoUrl}" target="_blank" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
+                                <i class="fa-solid fa-video"></i>
+                                <span>Download Video MP4 (HD)</span>
+                            </a>
+                        `;
+                        if (ytData.audioUrl) {
                             actionList.innerHTML += `
-                                <a href="${resAud.url}" target="_blank" class="w-full py-3 px-4 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
+                                <a href="${ytData.audioUrl}" target="_blank" class="w-full py-3 px-4 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
                                     <i class="fa-solid fa-music"></i>
                                     <span>Download Audio MP3 Saja</span>
                                 </a>
