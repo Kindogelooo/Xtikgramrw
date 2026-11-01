@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Xtikgram Downloader - Multi Cloud Edition</title>
+    <title>Xtikgram Downloader - Multi Cloud Stable Edition</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -172,13 +172,13 @@
                             </div>
                         </div>
 
-                        <!-- TAB PEMILIH SERVER MANUAL (Khusus IG & YT) -->
+                        <!-- TAB PEMILIH SERVER INSTAGRAM & YOUTUBE -->
                         <div id="serverSelectorContainer" class="hidden space-y-2">
                             <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">Pilih Server Cloud API</label>
                             <div class="flex flex-nowrap space-x-2 overflow-x-auto pb-2 pr-6 hide-scrollbar w-full touch-pan-x items-center">
                                 <button onclick="setServerMode('auto')" id="srv_auto" class="srv-btn active-srv shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-orange-500 text-white shadow-md ios-active">⚡ Auto Bypass</button>
                                 <button onclick="setServerMode('v1')" id="srv_v1" class="srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active">☁️ Server v1</button>
-                                <button onclick="setServerMode('v2')" id="srv_v2" class="srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active">🔥 Server v2</button>
+                                <button onclick="setServerMode('v2')" id="srv_v2" class="srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active">🔥 Server v2 (Optimized)</button>
                             </div>
                         </div>
 
@@ -227,7 +227,7 @@
                         <div>
                             <h2 class="text-base font-bold text-slate-800">Xtikgram Downloader</h2>
                             <p class="text-xs text-slate-600 mt-1 font-medium leading-relaxed">
-                                Dilengkapi multi server cloud v1 & v2. Bebas pindah server jika terjadi gangguan!
+                                Dilengkapi multi server cloud v1 & v2 anti bug foto/video.
                             </p>
                         </div>
                         <div class="pt-2 border-t border-slate-200/50">
@@ -323,7 +323,6 @@
             document.querySelectorAll('.srv-btn').forEach(btn => {
                 btn.className = "srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active";
             });
-
             document.getElementById('srv_' + srv).className = "srv-btn active-srv shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-orange-500 text-white shadow-md ios-active";
         }
 
@@ -451,7 +450,7 @@
                     } else { throw new Error('Link TikTok tidak valid.'); }
                 } 
                 
-                // ================= INSTAGRAM (Multi Server v1 & v2) =================
+                // ================= INSTAGRAM (Multi Server v1 & v2 - Maximize v2) =================
                 else if (currentPlatform === 'instagram') {
                     loadingText.innerText = `Scrape Instagram (${currentServerMode})...`;
                     let success = false, igData = null;
@@ -459,8 +458,8 @@
 
                     if (currentServerMode === 'auto') {
                         igApis = [
-                            `https://api-cloud.my.id/downloader/instagram?url=${encodeURIComponent(url)}`,
-                            `https://api-cloud.my.id/downloader/instagramv2?url=${encodeURIComponent(url)}`
+                            `https://api-cloud.my.id/downloader/instagramv2?url=${encodeURIComponent(url)}`,
+                            `https://api-cloud.my.id/downloader/instagram?url=${encodeURIComponent(url)}`
                         ];
                     } else if (currentServerMode === 'v1') {
                         igApis = [`https://api-cloud.my.id/downloader/instagram?url=${encodeURIComponent(url)}`];
@@ -482,13 +481,18 @@
                     }
 
                     if (success && igData) {
+                        // Barbar Parser dioptimalkan untuk v2 & v1 agar array/objek foto/video tidak bug
                         let rawData = igData.data || igData.result || igData.url || igData;
                         let mediaItems = [];
 
                         if (Array.isArray(rawData)) {
                             mediaItems = rawData;
                         } else if (typeof rawData === 'object' && rawData !== null) {
-                            mediaItems = rawData.url || rawData.download_url || rawData.video || rawData.image ? [rawData] : (rawData.data || rawData.result || [rawData]);
+                            if (rawData.url || rawData.download_url || rawData.video || rawData.image) {
+                                mediaItems = [rawData];
+                            } else {
+                                mediaItems = rawData.data || rawData.result || rawData.images || rawData.videos || [rawData];
+                            }
                         }
 
                         if (mediaItems && mediaItems.length > 0) {
@@ -497,6 +501,8 @@
 
                             let firstObj = mediaItems[0];
                             let firstItemUrl = firstObj.url || firstObj.download_url || firstObj.video || firstObj.image || firstObj;
+                            
+                            // Deteksi akurat foto atau video (berdasarkan ekstensi, tipe, atau URL)
                             let isVideo = String(firstItemUrl).includes('.mp4') || String(firstItemUrl).includes('video') || url.includes('/reel/') || firstObj.type === 'video';
                             
                             if (isVideo) {
@@ -505,6 +511,7 @@
                                 setPreviewMode('image', firstItemUrl);
                             }
 
+                            actionList.innerHTML = '';
                             mediaItems.forEach((item, idx) => {
                                 let mediaUrl = item.url || item.download_url || item.video || item.image || item;
                                 let itemIsVideo = String(mediaUrl).includes('.mp4') || String(mediaUrl).includes('video') || url.includes('/reel/') || item.type === 'video';
