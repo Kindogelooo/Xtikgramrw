@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Xtikgram Downloader - Auto-Download Edition</title>
+    <title>Xtikgram Downloader - Final Auto-Save Edition</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -227,7 +227,7 @@
                         <div>
                             <h2 class="text-base font-bold text-slate-800">Xtikgram Downloader</h2>
                             <p class="text-xs text-slate-600 mt-1 font-medium leading-relaxed">
-                                Auto-Download & Preview Engine v3.
+                                Direct Auto-Save Xgram Edition.
                             </p>
                         </div>
                         <div class="pt-2 border-t border-slate-200/50">
@@ -416,7 +416,7 @@
             updateTabDisplay();
         });
 
-        // Fungsi Auto-Download Otomatis Langsung Simpan File (Tanpa Tab Baru)
+        // Fungsi Universal Auto-Download langsung simpan dengan nama direktori (Xtik, Xgram, Xtube)
         async function forceDownloadFile(url, prefix, ext, btnElement) {
             const originalContent = btnElement.innerHTML;
             btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Mengunduh...</span>`;
@@ -435,8 +435,17 @@
                 document.body.removeChild(a); 
                 URL.revokeObjectURL(blobUrl);
             } catch (err) {
-                // Fallback jika diblokir CORS browser: buka tab baru otomatis
-                window.open(url, '_blank');
+                // Fallback direct download menggunakan HTML5 download attribute & target blank supaya auto-save terpicu
+                const randomId = Math.floor(1000 + Math.random() * 9000);
+                const fileName = `${prefix}_${randomId}.${ext}`;
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                a.target = '_blank';
+                a.rel = 'noopener';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
             } finally {
                 btnElement.innerHTML = originalContent;
             }
@@ -470,13 +479,13 @@
                             setPreviewMode('video', data.play, data.cover);
                             actionList.innerHTML = `
                                 <button onclick="forceDownloadFile('${data.play}', 'Xtik', 'mp4', this)" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-video"></i><span>Download Video HD</span></button>
-                                <a href="${data.music}" target="_blank" class="w-full py-3 px-4 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-music"></i><span>Download Audio MP3</span></a>
+                                <button onclick="forceDownloadFile('${data.music}', 'Xtik', 'mp3', this)" class="w-full py-3 px-4 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-music"></i><span>Download Audio MP3</span></button>
                             `;
                         }
                     } else { throw new Error('Link TikTok tidak valid.'); }
                 } 
                 
-                // ================= INSTAGRAM (Auto-Download Langsung Simpan) =================
+                // ================= INSTAGRAM (Xgram Direct Auto-Save) =================
                 else if (currentPlatform === 'instagram') {
                     loadingText.innerText = `Scrape Instagram (${currentServerMode})...`;
                     let success = false, igJson = null;
@@ -539,7 +548,7 @@
                                 let ext = itemIsVideo ? 'mp4' : 'jpg';
                                 
                                 actionList.innerHTML += `
-                                    <button onclick="forceDownloadFile('${mediaUrl}', 'xinsta', '${ext}', this)" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
+                                    <button onclick="forceDownloadFile('${mediaUrl}', 'Xgram', '${ext}', this)" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
                                         <i class="fa-solid ${icon}"></i>
                                         <span>${label}</span>
                                     </button>
@@ -578,7 +587,7 @@
                         setPreviewMode('video', videoLink, thumbImg);
 
                         actionList.innerHTML += `
-                            <button onclick="forceDownloadFile('${videoLink}', 'xtube', 'mp4', this)" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
+                            <button onclick="forceDownloadFile('${videoLink}', 'Xtube', 'mp4', this)" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
                                 <i class="fa-solid fa-video"></i>
                                 <span>Download Video MP4</span>
                             </button>
