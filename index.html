@@ -111,6 +111,13 @@
 
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 4px; }
+
+        /* CUSTOM PLAYER CSS (Anti Select & Download) */
+        .custom-player {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
@@ -177,17 +184,34 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: DOWNLOAD -->
-                <div class="w-1/3 shrink-0 px-0 sm:px-1 space-y-4">
-                    <div class="glass-card rounded-3xl p-5 space-y-4 border border-orange-400/20">
-                        <div class="flex items-center space-x-3">
-                            <img id="mediaThumb" src="" alt="Thumbnail" class="w-16 h-20 object-cover rounded-xl bg-white shadow-sm border border-white">
-                            <div class="overflow-hidden flex-1">
-                                <p id="mediaAuthor" class="text-xs font-bold text-orange-600 truncate">@kinn</p>
-                                <p id="mediaDesc" class="text-[11px] text-slate-600 line-clamp-2 mt-1 font-medium">Konten siap diunduh</p>
+                <!-- TAB 2: DOWNLOAD (DENGAN CUSTOM VIDEO PREVIEW LAYER) -->
+                <div class="w-1/3 shrink-0 px-0 sm:px-1 space-y-3">
+                    <div class="glass-card rounded-3xl p-4 border border-orange-400/20 shadow-xl flex flex-col">
+                        
+                        <!-- PREVIEW CONTAINER BOX -->
+                        <div class="relative w-full h-48 sm:h-56 bg-slate-900/5 rounded-2xl overflow-hidden border border-white/60 shadow-inner flex justify-center items-center backdrop-blur-sm mb-3">
+                            <!-- Image Fallback (Kalau Foto) -->
+                            <img id="mediaThumb" src="" alt="Thumbnail" class="w-full h-full object-cover hidden">
+                            
+                            <!-- Video Player Custom (Tanpa Controls Bawaan + Anti Klik Kanan) -->
+                            <video id="mediaVideo" src="" class="custom-player w-full h-full object-contain hidden bg-black/10 cursor-pointer" oncontextmenu="return false;" disablePictureInPicture playsinline preload="metadata"></video>
+                            
+                            <!-- Overlay Play Button Custom ala iOS -->
+                            <div id="playOverlay" class="absolute inset-0 flex items-center justify-center pointer-events-none hidden transition-opacity duration-300">
+                                <div class="w-12 h-12 bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg border border-white/50 text-slate-800">
+                                    <i class="fa-solid fa-play text-lg ml-1"></i>
+                                </div>
                             </div>
                         </div>
-                        <div id="downloadActionList" class="space-y-2 pt-1 max-h-64 overflow-y-auto pr-1"></div>
+
+                        <!-- INFO AUTHOR & JUDUL -->
+                        <div class="text-center mb-3">
+                            <p id="mediaAuthor" class="text-xs font-extrabold text-orange-600 truncate px-2">@kinn</p>
+                            <p id="mediaDesc" class="text-[10px] text-slate-500 line-clamp-1 mt-0.5 font-bold">Preview Video Ready</p>
+                        </div>
+                        
+                        <!-- TOMBOL DOWNLOAD LIST -->
+                        <div id="downloadActionList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
                     </div>
                     <p class="text-center text-[10px] font-semibold text-slate-500">Geser dock ke Home untuk link baru.</p>
                 </div>
@@ -256,6 +280,50 @@
         const dockIndicator = document.getElementById('dockIndicator');
         const dockContainer = document.getElementById('dockContainer');
 
+        // CUSTOM VIDEO PLAYER LOGIC
+        const mediaVideo = document.getElementById('mediaVideo');
+        const mediaThumb = document.getElementById('mediaThumb');
+        const playOverlay = document.getElementById('playOverlay');
+
+        // Tap untuk Play/Pause Video
+        mediaVideo.addEventListener('click', () => {
+            if(mediaVideo.paused) {
+                mediaVideo.play();
+            } else {
+                mediaVideo.pause();
+            }
+        });
+
+        // Menyembunyikan icon play saat video berjalan
+        mediaVideo.addEventListener('play', () => {
+            playOverlay.style.opacity = '0';
+        });
+
+        // Memunculkan icon play saat di pause
+        mediaVideo.addEventListener('pause', () => {
+            playOverlay.style.opacity = '1';
+        });
+
+        // Fungsi Render Preview
+        function setPreviewMode(type, mediaUrl, posterUrl = '') {
+            if (type === 'video') {
+                mediaThumb.classList.add('hidden');
+                mediaVideo.classList.remove('hidden');
+                playOverlay.classList.remove('hidden');
+                
+                mediaVideo.src = mediaUrl;
+                if(posterUrl) mediaVideo.poster = posterUrl;
+                playOverlay.style.opacity = '1'; // Reset
+            } else {
+                mediaVideo.classList.add('hidden');
+                playOverlay.classList.add('hidden');
+                mediaVideo.pause();
+                
+                mediaThumb.classList.remove('hidden');
+                mediaThumb.src = mediaUrl;
+            }
+        }
+
         urlInput.addEventListener('input', () => {
             if (urlInput.value.length > 0) clearBtn.classList.remove('hidden');
             else clearBtn.classList.add('hidden');
@@ -274,7 +342,7 @@
                     clearBtn.classList.remove('hidden');
                 }
             } catch (err) {
-                alert('Gagal paste otomatis. Pastikan HP lu ngasih izin akses clipboard ke web ini!');
+                alert('Gagal paste otomatis. Pastikan HP lu ngasih izin akses clipboard!');
             }
         }
 
@@ -315,6 +383,9 @@
                 return;
             }
 
+            // Pause video otomatis saat keluar dari tab download
+            if (targetIdx !== 1) mediaVideo.pause();
+
             currentTabIdx = targetIdx;
             updateTabDisplay();
         }
@@ -326,7 +397,6 @@
             });
 
             let targetTranslate = '0%';
-
             if (currentTabIdx === 0) {
                 navHome.classList.remove('text-slate-500');
                 navHome.classList.add('text-orange-600');
@@ -343,10 +413,10 @@
                 dockIndicator.style.left = '66%';
                 targetTranslate = '-66.666%';
             }
-
             tabSlider.style.transform = `translateX(${targetTranslate})`;
         }
 
+        // TOUCH GESTURE
         let startX = 0, currentX = 0, isDragging = false;
         dockContainer.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
@@ -380,23 +450,21 @@
                 else if (currentTabIdx === 1) currentTabIdx = 0;
             }
             if (currentTabIdx === 1 && !isDataReady) currentTabIdx = diffX > 30 ? 2 : 0;
+            
+            if (currentTabIdx !== 1) mediaVideo.pause(); // Pause video kalo ganti tab
             updateTabDisplay();
         });
 
         async function forceDownloadName(url, prefix, ext, btnElement) {
             const originalContent = btnElement.innerHTML;
             btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Mengunduh...</span>`;
-            
             try {
                 const randomId = Math.floor(1000 + Math.random() * 9000);
                 const fileName = `${prefix}_${randomId}.${ext}`;
-
                 const response = await fetch(url);
                 if (!response.ok) throw new Error("CORS Block");
-                
                 const blob = await response.blob();
                 const blobUrl = URL.createObjectURL(blob);
-
                 const a = document.createElement('a');
                 a.href = blobUrl;
                 a.download = fileName;
@@ -413,15 +481,13 @@
 
         async function processDownload() {
             const url = urlInput.value.trim();
-            if (!url) {
-                alert('Patenkan linknya dulu bro!');
-                return;
-            }
+            if (!url) { alert('Patenkan linknya dulu bro!'); return; }
 
             loadingBox.classList.remove('hidden');
             loadingText.innerText = "Mengekstrak data dari server...";
             const actionList = document.getElementById('downloadActionList');
             actionList.innerHTML = '';
+            mediaVideo.pause(); // Reset video jika ada
 
             try {
                 // ================= TIKTOK =================
@@ -431,17 +497,20 @@
 
                     if (json.code === 0 && json.data) {
                         const data = json.data;
-                        document.getElementById('mediaThumb').src = data.cover || 'https://via.placeholder.com/150';
                         document.getElementById('mediaAuthor').innerText = `@${data.author?.unique_id || 'tiktok_user'}`;
                         document.getElementById('mediaDesc').innerText = data.title || 'TikTok Content (No Watermark)';
 
+                        // Cek apakah Foto atau Video
                         if (data.images && data.images.length > 0) {
+                            setPreviewMode('image', data.images[0]);
                             data.images.forEach((img, idx) => {
-                                actionList.innerHTML += `<button onclick="forceDownloadName('${img}', 'Xtik', 'jpg', this)" class="w-full py-2.5 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-image"></i><span>Download Foto ${idx + 1} (Xtik)</span></button>`;
+                                actionList.innerHTML += `<button onclick="forceDownloadName('${img}', 'Xtik', 'jpg', this)" class="w-full py-2.5 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-image"></i><span>Download Foto ${idx + 1}</span></button>`;
                             });
                         } else {
+                            // Setup Preview Video
+                            setPreviewMode('video', data.play, data.cover);
                             actionList.innerHTML = `
-                                <button onclick="forceDownloadName('${data.play}', 'Xtik', 'mp4', this)" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-video"></i><span>Download Video HD (Xtik)</span></button>
+                                <button onclick="forceDownloadName('${data.play}', 'Xtik', 'mp4', this)" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-video"></i><span>Download Video HD</span></button>
                                 <a href="${data.music}" target="_blank" class="w-full py-3 px-4 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-music"></i><span>Download Audio MP3</span></a>
                             `;
                         }
@@ -473,11 +542,20 @@
 
                     if (success && igData) {
                         let mediaItems = Array.isArray(igData.data) ? igData.data : (Array.isArray(igData.result) ? igData.result : [igData.url]);
-                        let firstThumb = mediaItems[0].url || mediaItems[0].thumbnail || mediaItems[0];
-
-                        document.getElementById('mediaThumb').src = firstThumb || 'https://via.placeholder.com/150';
+                        
                         document.getElementById('mediaAuthor').innerText = `@instagram_user`;
                         document.getElementById('mediaDesc').innerText = 'Instagram Reels / Foto';
+
+                        // Ambil item pertama untuk preview di layar
+                        let firstItem = mediaItems[0].url || mediaItems[0];
+                        let isFirstVid = firstItem.includes('.mp4') || firstItem.includes('video') || url.includes('/reel/');
+                        let thumbUrl = mediaItems[0].thumbnail || 'https://via.placeholder.com/150';
+                        
+                        if (isFirstVid) {
+                            setPreviewMode('video', firstItem, thumbUrl);
+                        } else {
+                            setPreviewMode('image', firstItem);
+                        }
 
                         mediaItems.forEach((item, idx) => {
                             let mediaUrl = item.url || item;
@@ -489,16 +567,16 @@
                             actionList.innerHTML += `
                                 <button onclick="forceDownloadName('${mediaUrl}', 'xinsta', '${ext}', this)" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
                                     <i class="fa-solid ${icon}"></i>
-                                    <span>${label} (xinsta)</span>
+                                    <span>${label}</span>
                                 </button>
                             `;
                         });
                     } else { throw new Error('Semua server Instagram Publik sedang diblokir Cloudflare. Coba 10 detik lagi.'); }
                 }
 
-                // ================= YOUTUBE (API OP TIER 1: Widipe & DavidCyril) =================
+                // ================= YOUTUBE =================
                 else if (currentPlatform === 'youtube') {
-                    loadingText.innerText = "Mengekstrak resolusi YouTube (API OP)...";
+                    loadingText.innerText = "Mengekstrak resolusi YouTube...";
                     
                     let cleanYtUrl = url;
                     try {
@@ -512,8 +590,6 @@
                     } catch(e) {}
 
                     let ytData = null;
-
-                    // ARRAY API OP UNTUK YOUTUBE
                     const ytApis = [
                         `https://api.davidcyriltech.my.id/youtube/mp4?url=${encodeURIComponent(cleanYtUrl)}`,
                         `https://widipe.com/download/ytdl?url=${encodeURIComponent(cleanYtUrl)}`,
@@ -525,7 +601,6 @@
                             let res = await fetch(endpoint);
                             let json = await res.json();
                             
-                            // BARBAR PARSER: Ambil link MP4 apapun struktur datanya
                             let videoLink = json.result?.video || json.result?.url || json.result?.download?.url || json.data?.dl || json.url;
                             let titleStr = json.result?.title || json.data?.title || json.title || 'YouTube Video';
                             let thumbImg = json.result?.thumbnail || json.data?.thumbnail || json.thumbnail || 'https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg';
@@ -534,13 +609,15 @@
                                 ytData = { url: videoLink, title: titleStr, thumb: thumbImg }; 
                                 break; 
                             }
-                        } catch(e) { console.log('Bypass ke API OP berikutnya...'); }
+                        } catch(e) {}
                     }
 
                     if (ytData && ytData.url) {
-                        document.getElementById('mediaThumb').src = ytData.thumb;
                         document.getElementById('mediaAuthor').innerText = `@youtube_creator`;
                         document.getElementById('mediaDesc').innerText = ytData.title;
+
+                        // Setup Preview Video (YouTube)
+                        setPreviewMode('video', ytData.url, ytData.thumb);
 
                         actionList.innerHTML += `
                             <a href="${ytData.url}" target="_blank" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
