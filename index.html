@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Xtikgram Downloader - Perfect Match Edition</title>
+    <title>Xtikgram Downloader - Auto-Download Edition</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -227,7 +227,7 @@
                         <div>
                             <h2 class="text-base font-bold text-slate-800">Xtikgram Downloader</h2>
                             <p class="text-xs text-slate-600 mt-1 font-medium leading-relaxed">
-                                Perfect Match Edition. Sinkron murni dengan Cloud API Docs.
+                                Auto-Download & Preview Engine v3.
                             </p>
                         </div>
                         <div class="pt-2 border-t border-slate-200/50">
@@ -416,6 +416,32 @@
             updateTabDisplay();
         });
 
+        // Fungsi Auto-Download Otomatis Langsung Simpan File (Tanpa Tab Baru)
+        async function forceDownloadFile(url, prefix, ext, btnElement) {
+            const originalContent = btnElement.innerHTML;
+            btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Mengunduh...</span>`;
+            try {
+                const randomId = Math.floor(1000 + Math.random() * 9000);
+                const fileName = `${prefix}_${randomId}.${ext}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("CORS Block");
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl; 
+                a.download = fileName;
+                document.body.appendChild(a); 
+                a.click(); 
+                document.body.removeChild(a); 
+                URL.revokeObjectURL(blobUrl);
+            } catch (err) {
+                // Fallback jika diblokir CORS browser: buka tab baru otomatis
+                window.open(url, '_blank');
+            } finally {
+                btnElement.innerHTML = originalContent;
+            }
+        }
+
         async function processDownload() {
             const url = urlInput.value.trim();
             if (!url) { alert('Patenkan linknya dulu bro!'); return; }
@@ -438,19 +464,19 @@
                         if (data.images && data.images.length > 0) {
                             setPreviewMode('image', data.images[0]);
                             data.images.forEach((img, idx) => {
-                                actionList.innerHTML += `<a href="${img}" target="_blank" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-image"></i><span>Download Foto ${idx + 1}</span></a>`;
+                                actionList.innerHTML += `<button onclick="forceDownloadFile('${img}', 'Xtik', 'jpg', this)" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-image"></i><span>Download Foto ${idx + 1}</span></button>`;
                             });
                         } else {
                             setPreviewMode('video', data.play, data.cover);
                             actionList.innerHTML = `
-                                <a href="${data.play}" target="_blank" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-video"></i><span>Download Video HD</span></a>
+                                <button onclick="forceDownloadFile('${data.play}', 'Xtik', 'mp4', this)" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-video"></i><span>Download Video HD</span></button>
                                 <a href="${data.music}" target="_blank" class="w-full py-3 px-4 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active"><i class="fa-solid fa-music"></i><span>Download Audio MP3</span></a>
                             `;
                         }
                     } else { throw new Error('Link TikTok tidak valid.'); }
                 } 
                 
-                // ================= INSTAGRAM (Sesuai Dokumentasi Response Asli) =================
+                // ================= INSTAGRAM (Auto-Download Langsung Simpan) =================
                 else if (currentPlatform === 'instagram') {
                     loadingText.innerText = `Scrape Instagram (${currentServerMode})...`;
                     let success = false, igJson = null;
@@ -471,8 +497,7 @@
                         try {
                             const res = await fetch(endpoint);
                             const json = await res.json();
-                            // Memastikan struktur result.media ada sesuai screenshot docs
-                            if (json && json.result && json.result.media) {
+                            if (json && (json.result || json.data || json.url)) {
                                 igJson = json;
                                 success = true;
                                 break;
@@ -480,24 +505,8 @@
                         } catch (err) {}
                     }
 
-                    // Fallback seandainya struktur JSON-nya agak beda sedikit
-                    if (!success) {
-                        for (let endpoint of igApis) {
-                            try {
-                                const res = await fetch(endpoint);
-                                const json = await res.json();
-                                if (json) {
-                                    igJson = json;
-                                    success = true;
-                                    break;
-                                }
-                            } catch (err) {}
-                        }
-                    }
-
                     if (success && igJson) {
-                        // Jalur paten sesuai dokumentasi: json.result.media
-                        let mediaArray = igJson.result?.media || igJson.data?.media || igJson.media || igJson.result || igJson.data || [];
+                        let mediaArray = igJson.result?.media || igJson.data?.media || igJson.media || igJson.result?.url || igJson.data || [];
                         if (!Array.isArray(mediaArray)) {
                             mediaArray = [mediaArray];
                         }
@@ -527,12 +536,13 @@
                                 let itemIsVideo = itemType === 'video' || mediaUrl.includes('.mp4') || mediaUrl.includes('video') || url.includes('/reel/');
                                 let label = itemIsVideo ? `Download Video ${mediaArray.length > 1 ? idx + 1 : ''}` : `Download Foto ${mediaArray.length > 1 ? idx + 1 : ''}`;
                                 let icon = itemIsVideo ? 'fa-video' : 'fa-image';
+                                let ext = itemIsVideo ? 'mp4' : 'jpg';
                                 
                                 actionList.innerHTML += `
-                                    <a href="${mediaUrl}" target="_blank" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
+                                    <button onclick="forceDownloadFile('${mediaUrl}', 'xinsta', '${ext}', this)" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
                                         <i class="fa-solid ${icon}"></i>
                                         <span>${label}</span>
-                                    </a>
+                                    </button>
                                 `;
                             });
                         } else { throw new Error('Array media Instagram kosong di dalam respons server.'); }
@@ -568,10 +578,10 @@
                         setPreviewMode('video', videoLink, thumbImg);
 
                         actionList.innerHTML += `
-                            <a href="${videoLink}" target="_blank" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
+                            <button onclick="forceDownloadFile('${videoLink}', 'xtube', 'mp4', this)" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
                                 <i class="fa-solid fa-video"></i>
                                 <span>Download Video MP4</span>
-                            </a>
+                            </button>
                         `;
                     } else { throw new Error('Gagal memproses YouTube lewat Cloud yt-dlp.'); }
                 }
