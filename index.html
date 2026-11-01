@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Xtikgram Downloader - Final Fixed Edition</title>
+    <title>Xtikgram Downloader - Ultra Safe Edition</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -227,7 +227,7 @@
                         <div>
                             <h2 class="text-base font-bold text-slate-800">Xtikgram Downloader</h2>
                             <p class="text-xs text-slate-600 mt-1 font-medium leading-relaxed">
-                                Final Clean Edition. Bebas bug [object Object] & 404.
+                                Ultra Safe Edition. Zero empty screen bug.
                             </p>
                         </div>
                         <div class="pt-2 border-t border-slate-200/50">
@@ -450,10 +450,10 @@
                     } else { throw new Error('Link TikTok tidak valid.'); }
                 } 
                 
-                // ================= INSTAGRAM (Safe v2 & v1 Parser) =================
+                // ================= INSTAGRAM (Universal Ultra-Safe Parser) =================
                 else if (currentPlatform === 'instagram') {
                     loadingText.innerText = `Scrape Instagram (${currentServerMode})...`;
-                    let success = false, igData = null;
+                    let success = false, igJson = null;
                     let igApis = [];
 
                     if (currentServerMode === 'auto') {
@@ -471,51 +471,56 @@
                         try {
                             const res = await fetch(endpoint);
                             const json = await res.json();
-                            let raw = json.data || json.result || json.url || json;
-                            if (raw) {
-                                igData = json;
+                            if (json) {
+                                igJson = json;
                                 success = true;
                                 break;
                             }
                         } catch (err) {}
                     }
 
-                    if (success && igData) {
-                        let rawData = igData.data || igData.result || igData.url || igData;
-                        let mediaItems = [];
-
-                        if (Array.isArray(rawData)) {
-                            mediaItems = rawData;
-                        } else if (typeof rawData === 'object' && rawData !== null) {
-                            if (rawData.url || rawData.download_url || rawData.video || rawData.image || typeof rawData === 'string') {
-                                mediaItems = [rawData];
-                            } else {
-                                mediaItems = rawData.data || rawData.result || rawData.images || rawData.videos || [rawData];
-                            }
+                    if (success && igJson) {
+                        // Ekstraksi universal dari berbagai macam bentuk balikan JSON server
+                        let rawList = igJson.data || igJson.result || igJson.url || igJson.images || igJson.videos || igJson;
+                        if (!Array.isArray(rawList)) {
+                            rawList = [rawList];
                         }
 
-                        if (mediaItems && mediaItems.length > 0) {
-                            document.getElementById('mediaAuthor').innerText = `@instagram_user`;
-                            document.getElementById('mediaDesc').innerText = igData.title || 'Instagram Content';
+                        // Filter dan kumpulkan link URL yang valid dari objek apa pun
+                        let validMediaLinks = [];
+                        rawList.forEach(item => {
+                            if (typeof item === 'string' && item.startsWith('http')) {
+                                validMediaLinks.push(item);
+                            } else if (typeof item === 'object' && item !== null) {
+                                let link = item.url || item.download_url || item.video || item.image || item.dl;
+                                if (link) validMediaLinks.push(link);
+                                // Cek kalau di dalamnya ada array lagi
+                                if (Array.isArray(item.data)) {
+                                    item.data.forEach(sub => {
+                                        let subLink = typeof sub === 'string' ? sub : (sub.url || sub.download_url);
+                                        if (subLink) validMediaLinks.push(subLink);
+                                    });
+                                }
+                            }
+                        });
 
-                            let firstObj = mediaItems[0];
-                            let firstItemUrl = typeof firstObj === 'string' ? firstObj : (firstObj.url || firstObj.download_url || firstObj.video || firstObj.image || '');
-                            
-                            let isVideo = String(firstItemUrl).includes('.mp4') || String(firstItemUrl).includes('video') || url.includes('/reel/') || firstObj.type === 'video';
-                            
-                            if (isVideo && firstItemUrl) {
-                                setPreviewMode('video', firstItemUrl, firstObj.thumbnail || '');
-                            } else if (firstItemUrl) {
-                                setPreviewMode('image', firstItemUrl);
+                        if (validMediaLinks.length > 0) {
+                            document.getElementById('mediaAuthor').innerText = `@instagram_user`;
+                            document.getElementById('mediaDesc').innerText = igJson.title || 'Instagram Content (Cloud)';
+
+                            let firstUrl = validMediaLinks[0];
+                            let isVideo = firstUrl.includes('.mp4') || firstUrl.includes('video') || url.includes('/reel/');
+
+                            if (isVideo) {
+                                setPreviewMode('video', firstUrl);
+                            } else {
+                                setPreviewMode('image', firstUrl);
                             }
 
                             actionList.innerHTML = '';
-                            mediaItems.forEach((item, idx) => {
-                                let mediaUrl = typeof item === 'string' ? item : (item.url || item.download_url || item.video || item.image || '');
-                                if (!mediaUrl) return;
-                                
-                                let itemIsVideo = String(mediaUrl).includes('.mp4') || String(mediaUrl).includes('video') || url.includes('/reel/') || item.type === 'video';
-                                let label = itemIsVideo ? `Download Video ${mediaItems.length > 1 ? idx + 1 : ''}` : `Download Foto ${mediaItems.length > 1 ? idx + 1 : ''}`;
+                            validMediaLinks.forEach((mediaUrl, idx) => {
+                                let itemIsVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video') || url.includes('/reel/');
+                                let label = itemIsVideo ? `Download Video ${validMediaLinks.length > 1 ? idx + 1 : ''}` : `Download Foto ${validMediaLinks.length > 1 ? idx + 1 : ''}`;
                                 let icon = itemIsVideo ? 'fa-video' : 'fa-image';
                                 
                                 actionList.innerHTML += `
@@ -525,8 +530,8 @@
                                     </a>
                                 `;
                             });
-                        } else { throw new Error('Format data Instagram kosong.'); }
-                    } else { throw new Error('Gagal mengambil data dari server Instagram v1 / v2.'); }
+                        } else { throw new Error('Gagal mendeteksi link media di dalam respons server.'); }
+                    } else { throw new Error('Server Instagram v1 / v2 tidak merespons.'); }
                 }
 
                 // ================= YOUTUBE =================
