@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Xtikgram Downloader - Final Auto-Save Edition</title>
+    <title>Xtools - All In One Media Downloader</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -92,14 +92,14 @@
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 1);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(255, 255, 255, 1);
-            width: 32%;
+            width: 24%;
             transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), 
                         left 0.45s cubic-bezier(0.25, 1, 0.5, 1),
                         width 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .pill-squish {
-            width: 38% !important; 
+            width: 30% !important; 
             background: rgba(255, 255, 255, 1);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 1);
         }
@@ -128,11 +128,11 @@
 
     <div class="app-container">
         <header class="w-full text-center py-3 z-10">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-orange-400 to-amber-500 shadow-lg shadow-orange-500/30 mb-3 relative">
-                <i class="fa-brands fa-tiktok text-3xl text-white drop-shadow-[1px_1px_0px_rgba(0,0,0,0.3)]"></i>
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 shadow-lg shadow-purple-500/30 mb-3 relative">
+                <i class="fa-solid fa-layer-group text-3xl text-white drop-shadow-[1px_1px_0px_rgba(0,0,0,0.3)]"></i>
             </div>
-            <h1 class="text-2xl font-bold tracking-tight text-slate-800">Xtikgram</h1>
-            <p class="text-[10px] text-slate-500 mt-1 font-bold tracking-wider">ALL IN ONE HD DOWNLOADER</p>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-800">Xtools</h1>
+            <p class="text-[10px] text-slate-500 mt-1 font-bold tracking-wider">TIKTOK • INSTAGRAM • YOUTUBE • SPOTIFY</p>
         </header>
 
         <main class="w-full my-auto z-10 relative overflow-x-hidden py-2">
@@ -141,30 +141,34 @@
                 <!-- TAB 1: HOME -->
                 <div class="w-1/3 shrink-0 px-0 sm:px-1 space-y-4">
                     <div class="glass-card rounded-3xl p-5 space-y-4">
-                        <div class="grid grid-cols-3 gap-1.5 p-1 bg-white/40 rounded-2xl border border-white/60 shadow-inner">
-                            <button onclick="setPlatform('tiktok')" id="platTikTok" class="py-2.5 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center space-y-1 transition-all bg-orange-500 text-white shadow-md ios-active">
-                                <i class="fa-brands fa-tiktok text-sm"></i>
+                        <!-- PLATFORM SELECTOR GRID -->
+                        <div class="grid grid-cols-4 gap-1 p-1 bg-white/40 rounded-2xl border border-white/60 shadow-inner">
+                            <button onclick="setPlatform('tiktok')" id="platTikTok" class="py-2 rounded-xl text-[9px] font-bold flex flex-col items-center justify-center space-y-1 transition-all bg-orange-500 text-white shadow-md ios-active">
+                                <i class="fa-brands fa-tiktok text-xs"></i>
                                 <span>TikTok</span>
                             </button>
-                            <button onclick="setPlatform('instagram')" id="platIg" class="py-2.5 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center space-y-1 transition-all text-slate-500 hover:text-slate-800 ios-active">
-                                <i class="fa-brands fa-instagram text-sm"></i>
-                                <span>Instagram</span>
+                            <button onclick="setPlatform('instagram')" id="platIg" class="py-2 rounded-xl text-[9px] font-bold flex flex-col items-center justify-center space-y-1 transition-all text-slate-500 hover:text-slate-800 ios-active">
+                                <i class="fa-brands fa-instagram text-xs"></i>
+                                <span>IG</span>
                             </button>
-                            <button onclick="setPlatform('youtube')" id="platYt" class="relative py-2.5 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center space-y-1 transition-all text-slate-500 hover:text-slate-800 ios-active">
-                                <span class="absolute -top-2 -right-1 bg-red-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-md shadow-sm border border-red-400">CLOUD</span>
-                                <i class="fa-brands fa-youtube text-sm"></i>
+                            <button onclick="setPlatform('youtube')" id="platYt" class="py-2 rounded-xl text-[9px] font-bold flex flex-col items-center justify-center space-y-1 transition-all text-slate-500 hover:text-slate-800 ios-active">
+                                <i class="fa-brands fa-youtube text-xs"></i>
                                 <span>YouTube</span>
+                            </button>
+                            <button onclick="setPlatform('spotify')" id="platSp" class="py-2 rounded-xl text-[9px] font-bold flex flex-col items-center justify-center space-y-1 transition-all text-slate-500 hover:text-slate-800 ios-active">
+                                <i class="fa-brands fa-spotify text-xs"></i>
+                                <span>Spotify</span>
                             </button>
                         </div>
 
                         <div class="space-y-2">
                             <label id="inputLabel" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Paste Link TikTok Disini</label>
                             <div class="relative">
-                                <button onclick="autoPaste()" title="Paste otomatis" class="absolute inset-y-0 left-0 pl-3.5 pr-2 flex items-center text-slate-400 hover:text-orange-500 transition-colors ios-active z-10 cursor-pointer">
+                                <button onclick="autoPaste()" title="Paste otomatis" class="absolute inset-y-0 left-0 pl-3.5 pr-2 flex items-center text-slate-400 hover:text-indigo-500 transition-colors ios-active z-10 cursor-pointer">
                                     <i class="fa-solid fa-clipboard-list text-sm"></i>
                                 </button>
                                 
-                                <input type="text" id="urlInput" placeholder="https://vt.tiktok.com/..." class="w-full pl-10 pr-10 py-3.5 bg-white/60 border border-white/80 rounded-2xl text-xs focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/50 transition text-slate-800 placeholder-slate-400 shadow-sm">
+                                <input type="text" id="urlInput" placeholder="https://vt.tiktok.com/..." class="w-full pl-10 pr-10 py-3.5 bg-white/60 border border-white/80 rounded-2xl text-xs focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/50 transition text-slate-800 placeholder-slate-400 shadow-sm">
                                 
                                 <button onclick="clearInput()" id="clearBtn" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-700 hidden ios-active z-10 cursor-pointer">
                                     <i class="fa-solid fa-xmark"></i>
@@ -176,27 +180,27 @@
                         <div id="serverSelectorContainer" class="hidden space-y-2">
                             <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">Pilih Server Cloud API</label>
                             <div class="flex flex-nowrap space-x-2 overflow-x-auto pb-2 pr-6 hide-scrollbar w-full touch-pan-x items-center">
-                                <button onclick="setServerMode('auto')" id="srv_auto" class="srv-btn active-srv shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-orange-500 text-white shadow-md ios-active">⚡ Auto Bypass</button>
+                                <button onclick="setServerMode('auto')" id="srv_auto" class="srv-btn active-srv shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-indigo-600 text-white shadow-md ios-active">⚡ Auto Bypass</button>
                                 <button onclick="setServerMode('v1')" id="srv_v1" class="srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active">☁️ Server v1</button>
-                                <button onclick="setServerMode('v2')" id="srv_v2" class="srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active">🔥 Server v2 (Optimized)</button>
+                                <button onclick="setServerMode('v2')" id="srv_v2" class="srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active">🔥 Server v2</button>
                             </div>
                         </div>
 
-                        <button onclick="processDownload()" id="actionBtn" class="w-full py-3.5 px-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-2xl shadow-lg shadow-orange-500/30 transition flex items-center justify-center space-x-2 text-xs ios-active mt-2">
+                        <button onclick="processDownload()" id="actionBtn" class="w-full py-3.5 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-2xl shadow-lg shadow-purple-500/30 transition flex items-center justify-center space-x-2 text-xs ios-active mt-2">
                             <i class="fa-solid fa-bolt"></i>
-                            <span id="btnText">Proses Konten</span>
+                            <span id="btnText">Proses Xtools</span>
                         </button>
                     </div>
 
                     <div id="loadingBox" class="text-center py-6 hidden">
-                        <div class="inline-block w-7 h-7 border-3 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                        <div class="inline-block w-7 h-7 border-3 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
                         <p id="loadingText" class="text-xs font-semibold text-slate-600 mt-2">Menghubungkan ke Cloud Server...</p>
                     </div>
                 </div>
 
                 <!-- TAB 2: DOWNLOAD -->
                 <div class="w-1/3 shrink-0 px-0 sm:px-1 space-y-3">
-                    <div class="glass-card rounded-3xl p-4 border border-orange-400/20 shadow-xl flex flex-col">
+                    <div class="glass-card rounded-3xl p-4 border border-purple-400/20 shadow-xl flex flex-col">
                         
                         <div class="relative w-full h-48 sm:h-56 bg-slate-900/5 rounded-2xl overflow-hidden border border-white/60 shadow-inner flex justify-center items-center backdrop-blur-sm mb-3">
                             <img id="mediaThumb" src="" alt="Thumbnail" class="w-full h-full object-cover hidden">
@@ -209,8 +213,8 @@
                         </div>
 
                         <div class="text-center mb-3">
-                            <p id="mediaAuthor" class="text-xs font-extrabold text-orange-600 truncate px-2">@kinn</p>
-                            <p id="mediaDesc" class="text-[10px] text-slate-500 line-clamp-1 mt-0.5 font-bold">Preview Video Ready</p>
+                            <p id="mediaAuthor" class="text-xs font-extrabold text-purple-600 truncate px-2">@kinn</p>
+                            <p id="mediaDesc" class="text-[10px] text-slate-500 line-clamp-1 mt-0.5 font-bold">Preview Media Ready</p>
                         </div>
                         
                         <div id="downloadActionList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
@@ -221,18 +225,18 @@
                 <!-- TAB 3: ABOUT -->
                 <div class="w-1/3 shrink-0 px-0 sm:px-1 space-y-4">
                     <div class="glass-card rounded-3xl p-6 space-y-4 text-center">
-                        <div class="w-14 h-14 mx-auto rounded-2xl bg-orange-100 border border-orange-200 flex items-center justify-center text-orange-500 text-2xl shadow-inner">
-                            <i class="fa-solid fa-shield-halved"></i>
+                        <div class="w-14 h-14 mx-auto rounded-2xl bg-purple-100 border border-purple-200 flex items-center justify-center text-purple-600 text-2xl shadow-inner">
+                            <i class="fa-solid fa-layer-group"></i>
                         </div>
                         <div>
-                            <h2 class="text-base font-bold text-slate-800">Xtikgram Downloader</h2>
+                            <h2 class="text-base font-bold text-slate-800">Xtools Hub</h2>
                             <p class="text-xs text-slate-600 mt-1 font-medium leading-relaxed">
-                                Direct Auto-Save Xgram Edition.
+                                All-In-One Downloader: TikTok (Xtik), Instagram (Xgram), YouTube (Xtube), & Spotify (Xspot).
                             </p>
                         </div>
                         <div class="pt-2 border-t border-slate-200/50">
                             <p class="text-xs font-bold text-slate-500 mb-2">Developer:</p>
-                            <a href="https://instagram.com/kinn" target="_blank" class="inline-flex items-center space-x-2 py-2.5 px-5 rounded-xl bg-gradient-to-r from-pink-500 via-orange-500 to-amber-500 text-white text-xs font-bold shadow-lg shadow-orange-500/20 ios-active">
+                            <a href="https://instagram.com/kinn" target="_blank" class="inline-flex items-center space-x-2 py-2.5 px-5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white text-xs font-bold shadow-lg shadow-purple-500/20 ios-active">
                                 <i class="fa-brands fa-instagram text-sm"></i>
                                 <span>Instagram: @kinn</span>
                             </a>
@@ -246,7 +250,7 @@
         <!-- DOCK BAR -->
         <nav id="dockContainer" class="absolute bottom-6 left-5 right-5 max-w-[340px] mx-auto glass-dock rounded-full p-1.5 z-50 flex items-center justify-around select-none">
             <div id="dockIndicator" class="absolute top-1.5 bottom-1.5 pure-liquid-pill rounded-full pointer-events-none left-[2%] z-0"></div>
-            <button onclick="switchTab('home')" id="navHome" class="relative z-10 w-[32%] py-3 flex flex-col items-center justify-center text-orange-600 transition-all ios-active">
+            <button onclick="switchTab('home')" id="navHome" class="relative z-10 w-[32%] py-3 flex flex-col items-center justify-center text-purple-600 transition-all ios-active">
                 <i class="fa-solid fa-house text-sm"></i><span class="text-[10px] font-bold mt-0.5">Home</span>
             </button>
             <button onclick="switchTab('download')" id="navDownload" class="relative z-10 w-[32%] py-3 flex flex-col items-center justify-center text-slate-500 transition-all ios-active opacity-50 cursor-not-allowed">
@@ -323,7 +327,7 @@
             document.querySelectorAll('.srv-btn').forEach(btn => {
                 btn.className = "srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active";
             });
-            document.getElementById('srv_' + srv).className = "srv-btn active-srv shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-orange-500 text-white shadow-md ios-active";
+            document.getElementById('srv_' + srv).className = "srv-btn active-srv shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-indigo-600 text-white shadow-md ios-active";
         }
 
         function setPlatform(plat) {
@@ -331,29 +335,34 @@
             const btnTiktok = document.getElementById('platTikTok');
             const btnIg = document.getElementById('platIg');
             const btnYt = document.getElementById('platYt');
+            const btnSp = document.getElementById('platSp');
             const inputLabel = document.getElementById('inputLabel');
 
-            [btnTiktok, btnIg, btnYt].forEach(btn => {
-                btn.className = "py-2.5 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center space-y-1 transition-all text-slate-500 hover:text-slate-800 ios-active";
-                if(btn.id === 'platYt') btn.classList.add('relative');
+            [btnTiktok, btnIg, btnYt, btnSp].forEach(btn => {
+                btn.className = "py-2 rounded-xl text-[9px] font-bold flex flex-col items-center justify-center space-y-1 transition-all text-slate-500 hover:text-slate-800 ios-active";
             });
 
             if (plat === 'tiktok') {
                 serverSelectorContainer.classList.add('hidden');
                 setServerMode('auto'); 
-                btnTiktok.className = "py-2.5 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center space-y-1 transition-all bg-orange-500 text-white shadow-md ios-active";
+                btnTiktok.className = "py-2 rounded-xl text-[9px] font-bold flex flex-col items-center justify-center space-y-1 transition-all bg-orange-500 text-white shadow-md ios-active";
                 inputLabel.innerText = "Paste Link TikTok Disini";
                 urlInput.placeholder = "https://vt.tiktok.com/...";
             } else if (plat === 'instagram') {
                 serverSelectorContainer.classList.remove('hidden');
-                btnIg.className = "py-2.5 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center space-y-1 transition-all bg-orange-500 text-white shadow-md ios-active";
+                btnIg.className = "py-2 rounded-xl text-[9px] font-bold flex flex-col items-center justify-center space-y-1 transition-all bg-indigo-600 text-white shadow-md ios-active";
                 inputLabel.innerText = "Paste Link Instagram (Reels/Foto)";
                 urlInput.placeholder = "https://www.instagram.com/p/...";
             } else if (plat === 'youtube') {
-                serverSelectorContainer.classList.remove('hidden');
-                btnYt.className = "relative py-2.5 rounded-xl text-[10px] font-bold flex flex-col items-center justify-center space-y-1 transition-all bg-red-600 text-white shadow-md ios-active";
-                inputLabel.innerText = "Paste Link YouTube Disini";
-                urlInput.placeholder = "https://youtu.be/...";
+                serverSelectorContainer.classList.add('hidden');
+                btnYt.className = "py-2 rounded-xl text-[9px] font-bold flex flex-col items-center justify-center space-y-1 transition-all bg-red-600 text-white shadow-md ios-active";
+                inputLabel.innerText = "Paste Link / Judul YouTube Disini";
+                urlInput.placeholder = "https://youtu.be/... atau Judul Lagu";
+            } else if (plat === 'spotify') {
+                serverSelectorContainer.classList.add('hidden');
+                btnSp.className = "py-2 rounded-xl text-[9px] font-bold flex flex-col items-center justify-center space-y-1 transition-all bg-emerald-600 text-white shadow-md ios-active";
+                inputLabel.innerText = "Paste Link / Judul Lagu Spotify Disini";
+                urlInput.placeholder = "https://open.spotify.com/track/... atau Judul Lagu";
             }
         }
 
@@ -369,18 +378,18 @@
 
         function updateTabDisplay() {
             [navHome, navDownload, navAbout].forEach(nav => {
-                nav.classList.remove('text-orange-600');
+                nav.classList.remove('text-purple-600');
                 nav.classList.add('text-slate-500');
             });
             let targetTranslate = '0%';
             if (currentTabIdx === 0) {
-                navHome.classList.remove('text-slate-500'); navHome.classList.add('text-orange-600');
+                navHome.classList.remove('text-slate-500'); navHome.classList.add('text-purple-600');
                 dockIndicator.style.left = '2%'; targetTranslate = '0%';
             } else if (currentTabIdx === 1) {
-                navDownload.classList.remove('text-slate-500'); navDownload.classList.add('text-orange-600');
+                navDownload.classList.remove('text-slate-500'); navDownload.classList.add('text-purple-600');
                 dockIndicator.style.left = '34%'; targetTranslate = '-33.333%';
             } else if (currentTabIdx === 2) {
-                navAbout.classList.remove('text-slate-500'); navAbout.classList.add('text-orange-600');
+                navAbout.classList.remove('text-slate-500'); navAbout.classList.add('text-purple-600');
                 dockIndicator.style.left = '66%'; targetTranslate = '-66.666%';
             }
             tabSlider.style.transform = `translateX(${targetTranslate})`;
@@ -416,10 +425,10 @@
             updateTabDisplay();
         });
 
-        // Fungsi Universal Auto-Download langsung simpan dengan nama direktori (Xtik, Xgram, Xtube)
+        // Fungsi Download Aman dengan Direct Fallback untuk Media yang diblokir CORS ketat
         async function forceDownloadFile(url, prefix, ext, btnElement) {
             const originalContent = btnElement.innerHTML;
-            btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Mengunduh...</span>`;
+            btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Menyiapkan...</span>`;
             try {
                 const randomId = Math.floor(1000 + Math.random() * 9000);
                 const fileName = `${prefix}_${randomId}.${ext}`;
@@ -435,7 +444,6 @@
                 document.body.removeChild(a); 
                 URL.revokeObjectURL(blobUrl);
             } catch (err) {
-                // Fallback direct download menggunakan HTML5 download attribute & target blank supaya auto-save terpicu
                 const randomId = Math.floor(1000 + Math.random() * 9000);
                 const fileName = `${prefix}_${randomId}.${ext}`;
                 const a = document.createElement('a');
@@ -452,8 +460,8 @@
         }
 
         async function processDownload() {
-            const url = urlInput.value.trim();
-            if (!url) { alert('Patenkan linknya dulu bro!'); return; }
+            const queryVal = urlInput.value.trim();
+            if (!queryVal) { alert('Isi link atau query-nya dulu bro!'); return; }
 
             loadingBox.classList.remove('hidden');
             loadingText.innerText = "Menghubungkan ke Cloud Server...";
@@ -464,7 +472,7 @@
             try {
                 // ================= TIKTOK =================
                 if (currentPlatform === 'tiktok') {
-                    const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
+                    const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(queryVal)}`);
                     const json = await res.json();
                     if (json.code === 0 && json.data) {
                         const data = json.data;
@@ -485,7 +493,7 @@
                     } else { throw new Error('Link TikTok tidak valid.'); }
                 } 
                 
-                // ================= INSTAGRAM (Xgram Direct Auto-Save) =================
+                // ================= INSTAGRAM (Xgram Multi-Parser) =================
                 else if (currentPlatform === 'instagram') {
                     loadingText.innerText = `Scrape Instagram (${currentServerMode})...`;
                     let success = false, igJson = null;
@@ -493,20 +501,20 @@
 
                     if (currentServerMode === 'auto') {
                         igApis = [
-                            `https://api-cloud.my.id/downloader/instagramv2?url=${encodeURIComponent(url)}`,
-                            `https://api-cloud.my.id/downloader/instagram?url=${encodeURIComponent(url)}`
+                            `https://api-cloud.my.id/downloader/instagramv2?url=${encodeURIComponent(queryVal)}`,
+                            `https://api-cloud.my.id/downloader/instagram?url=${encodeURIComponent(queryVal)}`
                         ];
                     } else if (currentServerMode === 'v1') {
-                        igApis = [`https://api-cloud.my.id/downloader/instagram?url=${encodeURIComponent(url)}`];
+                        igApis = [`https://api-cloud.my.id/downloader/instagram?url=${encodeURIComponent(queryVal)}`];
                     } else if (currentServerMode === 'v2') {
-                        igApis = [`https://api-cloud.my.id/downloader/instagramv2?url=${encodeURIComponent(url)}`];
+                        igApis = [`https://api-cloud.my.id/downloader/instagramv2?url=${encodeURIComponent(queryVal)}`];
                     }
 
                     for (let endpoint of igApis) {
                         try {
                             const res = await fetch(endpoint);
                             const json = await res.json();
-                            if (json && (json.result || json.data || json.url)) {
+                            if (json && (json.result || json.data || json.url || json.media)) {
                                 igJson = json;
                                 success = true;
                                 break;
@@ -528,7 +536,7 @@
                             let firstUrl = typeof firstItem === 'string' ? firstItem : (firstItem.url || firstItem.download_url);
                             let firstType = typeof firstItem === 'object' ? firstItem.type : '';
                             
-                            let isVideo = firstType === 'video' || (firstUrl && (firstUrl.includes('.mp4') || firstUrl.includes('video'))) || url.includes('/reel/');
+                            let isVideo = firstType === 'video' || (firstUrl && (firstUrl.includes('.mp4') || firstUrl.includes('video'))) || queryVal.includes('/reel/');
 
                             if (isVideo && firstUrl) {
                                 setPreviewMode('video', firstUrl, igJson.result?.thumbnail || '');
@@ -542,57 +550,85 @@
                                 if (!mediaUrl) return;
                                 
                                 let itemType = typeof item === 'object' ? item.type : '';
-                                let itemIsVideo = itemType === 'video' || mediaUrl.includes('.mp4') || mediaUrl.includes('video') || url.includes('/reel/');
+                                let itemIsVideo = itemType === 'video' || mediaUrl.includes('.mp4') || mediaUrl.includes('video') || queryVal.includes('/reel/');
                                 let label = itemIsVideo ? `Download Video ${mediaArray.length > 1 ? idx + 1 : ''}` : `Download Foto ${mediaArray.length > 1 ? idx + 1 : ''}`;
                                 let icon = itemIsVideo ? 'fa-video' : 'fa-image';
                                 let ext = itemIsVideo ? 'mp4' : 'jpg';
                                 
                                 actionList.innerHTML += `
-                                    <button onclick="forceDownloadFile('${mediaUrl}', 'Xgram', '${ext}', this)" class="w-full py-3 px-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
+                                    <button onclick="forceDownloadFile('${mediaUrl}', 'Xgram', '${ext}', this)" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
                                         <i class="fa-solid ${icon}"></i>
                                         <span>${label}</span>
                                     </button>
                                 `;
                             });
-                        } else { throw new Error('Array media Instagram kosong di dalam respons server.'); }
-                    } else { throw new Error('Gagal mengambil data dari server Instagram v1 / v2.'); }
+                        } else { throw new Error('Data media Instagram tidak ditemukan.'); }
+                    } else { throw new Error('Gagal mengambil data dari server Instagram.'); }
                 }
 
-                // ================= YOUTUBE =================
+                // ================= YOUTUBE (ytplayv2 sesuai struktur sukses) =================
                 else if (currentPlatform === 'youtube') {
-                    loadingText.innerText = "Ekstrak yt-dlp via Cloud...";
+                    loadingText.innerText = "Mencari & Mengunduh YouTube (ytplayv2)...";
                     
-                    let cleanYtUrl = url;
-                    try {
-                        if (cleanYtUrl.includes('youtu.be/')) {
-                            const vidId = cleanYtUrl.split('youtu.be/')[1].split('?')[0];
-                            cleanYtUrl = `https://www.youtube.com/watch?v=${vidId}`;
-                        } else if (cleanYtUrl.includes('youtube.com/shorts/')) {
-                            const vidId = cleanYtUrl.split('youtube.com/shorts/')[1].split('?')[0];
-                            cleanYtUrl = `https://www.youtube.com/watch?v=${vidId}`;
-                        }
-                    } catch(e) {}
-
-                    const res = await fetch(`https://api-cloud.my.id/downloader/youtube?url=${encodeURIComponent(cleanYtUrl)}`);
+                    const res = await fetch(`https://api-cloud.my.id/downloader/ytplayv2?q=${encodeURIComponent(queryVal)}`);
                     const json = await res.json();
                     
-                    let videoLink = json.result?.video || json.data?.video || json.result?.url || json.url;
-                    let titleStr = json.result?.title || json.data?.title || json.title || 'YouTube Video';
-                    let thumbImg = json.result?.thumbnail || json.data?.thumbnail || json.thumbnail || 'https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg';
+                    if (json && json.result) {
+                        const resData = json.result;
+                        let videoLink = resData.url || resData.embed || resData.dl;
+                        let titleStr = resData.title || 'YouTube Video';
+                        let channelStr = resData.channel || 'YouTube Creator';
+                        let thumbImg = resData.thumb || 'https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg';
 
-                    if (videoLink) {
-                        document.getElementById('mediaAuthor').innerText = `@youtube_creator`;
-                        document.getElementById('mediaDesc').innerText = titleStr;
+                        if (videoLink) {
+                            document.getElementById('mediaAuthor').innerText = `@${channelStr}`;
+                            document.getElementById('mediaDesc').innerText = titleStr;
 
-                        setPreviewMode('video', videoLink, thumbImg);
+                            setPreviewMode('video', videoLink, thumbImg);
 
-                        actionList.innerHTML += `
-                            <button onclick="forceDownloadFile('${videoLink}', 'Xtube', 'mp4', this)" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
-                                <i class="fa-solid fa-video"></i>
-                                <span>Download Video MP4</span>
-                            </button>
-                        `;
-                    } else { throw new Error('Gagal memproses YouTube lewat Cloud yt-dlp.'); }
+                            actionList.innerHTML += `
+                                <button onclick="forceDownloadFile('${videoLink}', 'Xtube', 'mp4', this)" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
+                                    <i class="fa-solid fa-video"></i>
+                                    <span>Download Video MP4</span>
+                                </button>
+                            `;
+
+                            // Jika ada video 'others' (rekomendasi terkait), render juga tombolnya jika diinginkan
+                            if (resData.others && resData.others.length > 0) {
+                                // Bisa ditampilkan atau diabaikan agar rapi
+                            }
+                        } else { throw new Error('Link video YouTube tidak ditemukan di dalam respons server.'); }
+                    } else { throw new Error('Gagal memproses YouTube ytplayv2.'); }
+                }
+
+                // ================= SPOTIFY (spotify2 sesuai struktur sukses) =================
+                else if (currentPlatform === 'spotify') {
+                    loadingText.innerText = "Mencari & Mengunduh Spotify (spotify2)...";
+                    
+                    const res = await fetch(`https://api-cloud.my.id/downloader/spotify2?query=${encodeURIComponent(queryVal)}`);
+                    const json = await res.json();
+                    
+                    if (json && json.result) {
+                        const spData = json.result;
+                        let audioLink = spData.download_url;
+                        let trackTitle = spData.title || 'Spotify Audio';
+                        let artistName = spData.artist || 'Unknown Artist';
+                        let trackThumb = spData.thumbnail || 'https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg';
+
+                        if (audioLink) {
+                            document.getElementById('mediaAuthor').innerText = `@${artistName}`;
+                            document.getElementById('mediaDesc').innerText = `${trackTitle} (${spData.album || 'Album'})`;
+
+                            setPreviewMode('image', trackThumb);
+
+                            actionList.innerHTML += `
+                                <button onclick="forceDownloadFile('${audioLink}', 'Xspot', 'mp3', this)" class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl text-center transition flex items-center justify-center space-x-2 shadow-md ios-active">
+                                    <i class="fa-solid fa-music"></i>
+                                    <span>Download Audio MP3</span>
+                                </button>
+                            `;
+                        } else { throw new Error('Link download audio Spotify tidak ditemukan.'); }
+                    } else { throw new Error('Gagal mengambil data dari Spotify.'); }
                 }
 
                 isDataReady = true;
