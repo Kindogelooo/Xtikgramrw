@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Xtikgram Downloader - Premium Edition</title>
+    <title>Xtikgram Downloader - Ultimate Edition</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -113,7 +113,6 @@
         ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 4px; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
 
-        /* CUSTOM PLAYER CSS */
         .custom-player {
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -173,19 +172,14 @@
                             </div>
                         </div>
 
-                        <!-- FITUR BARU: SELECTOR SERVER (Mendelep Bug Fixed) -->
+                        <!-- MULTI SERVER SELECTION (TERMASUK CLOUD API) -->
                         <div id="serverSelectorContainer" class="hidden space-y-2">
-                            <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">Pilih Server API</label>
-                            <!-- flex-nowrap dan shrink-0 untuk memastikan tombol tidak terpotong -->
+                            <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">Pilih Server Engine</label>
                             <div class="flex flex-nowrap space-x-2 overflow-x-auto pb-2 pr-6 hide-scrollbar w-full touch-pan-x items-center">
                                 <button onclick="setServerMode('auto')" id="srv_auto" class="srv-btn active-srv shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-orange-500 text-white shadow-md ios-active">⚡ Auto Bypass</button>
+                                <button onclick="setServerMode('cloud')" id="srv_cloud" class="srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-purple-100/60 text-purple-700 hover:bg-purple-200 border border-purple-300/50 ios-active">☁️ Cloud Engine</button>
                                 <button onclick="setServerMode('siputzx')" id="srv_siputzx" class="srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active">Siput</button>
                                 <button onclick="setServerMode('agatz')" id="srv_agatz" class="srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active">Agatz</button>
-                                <button onclick="setServerMode('vreden')" id="srv_vreden" class="srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active">Vreden</button>
-                                <button onclick="setServerMode('ryzen')" id="srv_ryzen" class="srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active">Ryzen</button>
-                                
-                                <!-- TOMBOL SNAPINSTA (CADANGAN MANUAL) -->
-                                <button onclick="setServerMode('snapinsta')" id="srv_snapinsta" class="srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-pink-100/60 text-pink-600 hover:bg-pink-200 border border-pink-300/50 ios-active">🔥 SnapInsta</button>
                             </div>
                         </div>
 
@@ -253,20 +247,14 @@
         <!-- DOCK BAR -->
         <nav id="dockContainer" class="absolute bottom-6 left-5 right-5 max-w-[340px] mx-auto glass-dock rounded-full p-1.5 z-50 flex items-center justify-around select-none">
             <div id="dockIndicator" class="absolute top-1.5 bottom-1.5 pure-liquid-pill rounded-full pointer-events-none left-[2%] z-0"></div>
-
             <button onclick="switchTab('home')" id="navHome" class="relative z-10 w-[32%] py-3 flex flex-col items-center justify-center text-orange-600 transition-all ios-active">
-                <i class="fa-solid fa-house text-sm"></i>
-                <span class="text-[10px] font-bold mt-0.5">Home</span>
+                <i class="fa-solid fa-house text-sm"></i><span class="text-[10px] font-bold mt-0.5">Home</span>
             </button>
-
             <button onclick="switchTab('download')" id="navDownload" class="relative z-10 w-[32%] py-3 flex flex-col items-center justify-center text-slate-500 transition-all ios-active opacity-50 cursor-not-allowed">
-                <i class="fa-solid fa-cloud-arrow-down text-sm"></i>
-                <span class="text-[10px] font-bold mt-0.5">Download</span>
+                <i class="fa-solid fa-cloud-arrow-down text-sm"></i><span class="text-[10px] font-bold mt-0.5">Download</span>
             </button>
-
             <button onclick="switchTab('about')" id="navAbout" class="relative z-10 w-[32%] py-3 flex flex-col items-center justify-center text-slate-500 transition-all ios-active">
-                <i class="fa-solid fa-circle-info text-sm"></i>
-                <span class="text-[10px] font-bold mt-0.5">About</span>
+                <i class="fa-solid fa-circle-info text-sm"></i><span class="text-[10px] font-bold mt-0.5">About</span>
             </button>
         </nav>
     </div>
@@ -274,7 +262,7 @@
     <!-- SCRIPT LOGIC -->
     <script>
         let currentPlatform = 'tiktok';
-        let currentServerMode = 'auto'; // Mode server (auto / siputzx / agatz / vreden / ryzen / snapinsta)
+        let currentServerMode = 'auto'; 
         let isDataReady = false;
         let currentTabIdx = 0; 
 
@@ -323,40 +311,26 @@
             if (urlInput.value.length > 0) clearBtn.classList.remove('hidden');
             else clearBtn.classList.add('hidden');
         });
-
-        function clearInput() {
-            urlInput.value = '';
-            clearBtn.classList.add('hidden');
-        }
-
+        function clearInput() { urlInput.value = ''; clearBtn.classList.add('hidden'); }
         async function autoPaste() {
             try {
                 const text = await navigator.clipboard.readText();
-                if(text) {
-                    urlInput.value = text;
-                    clearBtn.classList.remove('hidden');
-                }
-            } catch (err) {
-                alert('Gagal paste otomatis. Pastikan HP lu ngasih izin akses clipboard!');
-            }
+                if(text) { urlInput.value = text; clearBtn.classList.remove('hidden'); }
+            } catch (err) { alert('Gagal paste otomatis.'); }
         }
 
-        // FITUR GANTI SERVER
         function setServerMode(srv) {
             currentServerMode = srv;
-            
-            // Reset semua class tombol server
             document.querySelectorAll('.srv-btn').forEach(btn => {
-                if(btn.id === 'srv_snapinsta') {
-                    btn.className = "srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-pink-100/60 text-pink-600 hover:bg-pink-200 border border-pink-300/50 ios-active";
+                if (btn.id === 'srv_cloud') {
+                    btn.className = "srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-purple-100/60 text-purple-700 hover:bg-purple-200 border border-purple-300/50 ios-active";
                 } else {
                     btn.className = "srv-btn shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-white/40 text-slate-600 hover:bg-white/60 border border-white/50 ios-active";
                 }
             });
 
-            // Warnai tombol yang dipilih
-            if(srv === 'snapinsta') {
-                document.getElementById('srv_snapinsta').className = "srv-btn active-srv shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-pink-500 text-white shadow-md ios-active";
+            if (srv === 'cloud') {
+                document.getElementById('srv_cloud').className = "srv-btn active-srv shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-purple-600 text-white shadow-md ios-active";
             } else {
                 document.getElementById('srv_' + srv).className = "srv-btn active-srv shrink-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all bg-orange-500 text-white shadow-md ios-active";
             }
@@ -374,7 +348,6 @@
                 if(btn.id === 'platYt') btn.classList.add('relative');
             });
 
-            // TAMPILKAN/SEMBUNYIKAN PEMILIH SERVER
             if (plat === 'tiktok') {
                 serverSelectorContainer.classList.add('hidden');
                 setServerMode('auto'); 
@@ -398,12 +371,7 @@
             let targetIdx = 0;
             if (tabName === 'download') targetIdx = 1;
             if (tabName === 'about') targetIdx = 2;
-
-            if (targetIdx === 1 && !isDataReady) {
-                alert('Silakan proses konten terlebih dahulu!');
-                return;
-            }
-
+            if (targetIdx === 1 && !isDataReady) { alert('Silakan proses konten terlebih dahulu!'); return; }
             if (targetIdx !== 1) mediaVideo.pause();
             currentTabIdx = targetIdx;
             updateTabDisplay();
@@ -414,52 +382,37 @@
                 nav.classList.remove('text-orange-600');
                 nav.classList.add('text-slate-500');
             });
-
             let targetTranslate = '0%';
             if (currentTabIdx === 0) {
-                navHome.classList.remove('text-slate-500');
-                navHome.classList.add('text-orange-600');
-                dockIndicator.style.left = '2%';
-                targetTranslate = '0%';
+                navHome.classList.remove('text-slate-500'); navHome.classList.add('text-orange-600');
+                dockIndicator.style.left = '2%'; targetTranslate = '0%';
             } else if (currentTabIdx === 1) {
-                navDownload.classList.remove('text-slate-500');
-                navDownload.classList.add('text-orange-600');
-                dockIndicator.style.left = '34%';
-                targetTranslate = '-33.333%';
+                navDownload.classList.remove('text-slate-500'); navDownload.classList.add('text-orange-600');
+                dockIndicator.style.left = '34%'; targetTranslate = '-33.333%';
             } else if (currentTabIdx === 2) {
-                navAbout.classList.remove('text-slate-500');
-                navAbout.classList.add('text-orange-600');
-                dockIndicator.style.left = '66%';
-                targetTranslate = '-66.666%';
+                navAbout.classList.remove('text-slate-500'); navAbout.classList.add('text-orange-600');
+                dockIndicator.style.left = '66%'; targetTranslate = '-66.666%';
             }
             tabSlider.style.transform = `translateX(${targetTranslate})`;
         }
 
-        // TOUCH GESTURE
         let startX = 0, currentX = 0, isDragging = false;
         dockContainer.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            isDragging = true;
-            dockIndicator.classList.add('pill-squish'); 
-            dockIndicator.style.transition = 'width 0.3s cubic-bezier(0.25, 1, 0.5, 1), left 0s';
+            startX = e.touches[0].clientX; isDragging = true;
+            dockIndicator.classList.add('pill-squish'); dockIndicator.style.transition = 'width 0.3s cubic-bezier(0.25, 1, 0.5, 1), left 0s';
         });
         dockContainer.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
-            currentX = e.touches[0].clientX;
-            let diffX = currentX - startX;
+            currentX = e.touches[0].clientX; let diffX = currentX - startX;
             let baseLeft = currentTabIdx === 0 ? 2 : (currentTabIdx === 1 ? 34 : 66);
             let movePercent = (diffX / dockContainer.offsetWidth) * 100;
             let newPos = baseLeft + movePercent;
-            if (newPos < -2) newPos = -2;
-            if (newPos > 68) newPos = 68;
+            if (newPos < -2) newPos = -2; if (newPos > 68) newPos = 68;
             dockIndicator.style.left = newPos + '%';
         });
         dockContainer.addEventListener('touchend', (e) => {
-            if (!isDragging) return;
-            isDragging = false;
-            dockIndicator.classList.remove('pill-squish');
-            dockIndicator.style.transition = 'all 0.45s cubic-bezier(0.25, 1, 0.5, 1)';
-            
+            if (!isDragging) return; isDragging = false;
+            dockIndicator.classList.remove('pill-squish'); dockIndicator.style.transition = 'all 0.45s cubic-bezier(0.25, 1, 0.5, 1)';
             let diffX = e.changedTouches[0].clientX - startX;
             if (diffX > 30) {
                 if (currentTabIdx === 0) currentTabIdx = isDataReady ? 1 : 2;
@@ -469,7 +422,6 @@
                 else if (currentTabIdx === 1) currentTabIdx = 0;
             }
             if (currentTabIdx === 1 && !isDataReady) currentTabIdx = diffX > 30 ? 2 : 0;
-            
             if (currentTabIdx !== 1) mediaVideo.pause(); 
             updateTabDisplay();
         });
@@ -485,17 +437,9 @@
                 const blob = await response.blob();
                 const blobUrl = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = blobUrl;
-                a.download = fileName;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(blobUrl);
-            } catch (err) {
-                window.open(url, '_blank');
-            } finally {
-                btnElement.innerHTML = originalContent;
-            }
+                a.href = blobUrl; a.download = fileName;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(blobUrl);
+            } catch (err) { window.open(url, '_blank'); } finally { btnElement.innerHTML = originalContent; }
         }
 
         async function processDownload() {
@@ -509,16 +453,14 @@
             mediaVideo.pause(); 
 
             try {
-                // ================= TIKTOK (SELALU AUTO) =================
+                // ================= TIKTOK =================
                 if (currentPlatform === 'tiktok') {
                     const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
                     const json = await res.json();
-
                     if (json.code === 0 && json.data) {
                         const data = json.data;
                         document.getElementById('mediaAuthor').innerText = `@${data.author?.unique_id || 'tiktok_user'}`;
                         document.getElementById('mediaDesc').innerText = data.title || 'TikTok Content (No Watermark)';
-
                         if (data.images && data.images.length > 0) {
                             setPreviewMode('image', data.images[0]);
                             data.images.forEach((img, idx) => {
@@ -534,60 +476,48 @@
                     } else { throw new Error('Link TikTok tidak valid.'); }
                 } 
                 
-                // ================= INSTAGRAM (4 API AUTO + 1 CADANGAN SNAPINSTA) =================
+                // ================= INSTAGRAM =================
                 else if (currentPlatform === 'instagram') {
                     loadingText.innerText = `Menembus server IG (${currentServerMode})...`;
                     let success = false, igData = null;
-
                     let igApis = [];
-                    if (currentServerMode === 'auto') {
-                        // Fitur Auto gak masukin SnapInsta (Tugas 4 Server Utama)
+
+                    if (currentServerMode === 'cloud') {
+                        igApis = [`https://api-cloud.my.id/instagram?url=${encodeURIComponent(url)}`, `https://api-cloud.my.id?url=${encodeURIComponent(url)}`];
+                    } else if (currentServerMode === 'auto') {
                         igApis = [
+                            `https://api-cloud.my.id/instagram?url=${encodeURIComponent(url)}`,
                             `https://api.siputzx.my.id/api/d/igdl?url=${encodeURIComponent(url)}`,
-                            `https://api.agatz.xyz/api/instagram?url=${encodeURIComponent(url)}`,
-                            `https://api.vreden.web.id/api/igdownload?url=${encodeURIComponent(url)}`,
-                            `https://api.ryzendesu.vip/api/downloader/igdl?url=${encodeURIComponent(url)}`
+                            `https://api.agatz.xyz/api/instagram?url=${encodeURIComponent(url)}`
                         ];
                     } else if (currentServerMode === 'siputzx') { igApis = [`https://api.siputzx.my.id/api/d/igdl?url=${encodeURIComponent(url)}`]; } 
-                    else if (currentServerMode === 'agatz') { igApis = [`https://api.agatz.xyz/api/instagram?url=${encodeURIComponent(url)}`]; } 
-                    else if (currentServerMode === 'vreden') { igApis = [`https://api.vreden.web.id/api/igdownload?url=${encodeURIComponent(url)}`]; } 
-                    else if (currentServerMode === 'ryzen') { igApis = [`https://api.ryzendesu.vip/api/downloader/igdl?url=${encodeURIComponent(url)}`]; } 
-                    else if (currentServerMode === 'snapinsta') {
-                        // API Khusus Scraping SnapInsta
-                        igApis = [
-                            `https://api.ryzendesu.vip/api/downloader/snapinsta?url=${encodeURIComponent(url)}`,
-                            `https://widipe.com/download/igdl?url=${encodeURIComponent(url)}`
-                        ];
-                    }
+                    else if (currentServerMode === 'agatz') { igApis = [`https://api.agatz.xyz/api/instagram?url=${encodeURIComponent(url)}`]; }
 
                     for (let endpoint of igApis) {
                         try {
                             const res = await fetch(endpoint);
                             const json = await res.json();
-                            if ((json.data && json.data.length > 0) || (json.result && json.result.length > 0) || (json.url && json.url.length > 0)) {
-                                igData = json;
-                                success = true;
-                                break; 
+                            if ((json.data && json.data.length > 0) || (json.result && json.result.length > 0) || json.url || json.download_url) {
+                                igData = json; success = true; break; 
                             }
                         } catch (err) {}
                     }
 
                     if (success && igData) {
-                        let mediaItems = Array.isArray(igData.data) ? igData.data : (Array.isArray(igData.result) ? igData.result : (Array.isArray(igData.url) ? igData.url : [igData.url]));
+                        let mediaItems = Array.isArray(igData.data) ? igData.data : (Array.isArray(igData.result) ? igData.result : (Array.isArray(igData.url) ? igData.url : [igData.url || igData.download_url || igData.result]));
                         
                         document.getElementById('mediaAuthor').innerText = `@instagram_user`;
-                        document.getElementById('mediaDesc').innerText = 'Instagram Reels / Foto';
+                        document.getElementById('mediaDesc').innerText = 'Instagram Content';
 
-                        let firstItem = mediaItems[0].url || mediaItems[0];
-                        let isFirstVid = firstItem.includes('.mp4') || firstItem.includes('video') || url.includes('/reel/');
-                        let thumbUrl = mediaItems[0].thumbnail || 'https://via.placeholder.com/150';
+                        let firstItem = mediaItems[0].url || mediaItems[0].download_url || mediaItems[0];
+                        let isFirstVid = String(firstItem).includes('.mp4') || String(firstItem).includes('video') || url.includes('/reel/');
                         
-                        if (isFirstVid) { setPreviewMode('video', firstItem, thumbUrl); } 
+                        if (isFirstVid) { setPreviewMode('video', firstItem); } 
                         else { setPreviewMode('image', firstItem); }
 
                         mediaItems.forEach((item, idx) => {
-                            let mediaUrl = item.url || item;
-                            let isVideo = mediaUrl.includes('.mp4') || mediaUrl.includes('video') || url.includes('/reel/');
+                            let mediaUrl = item.url || item.download_url || item;
+                            let isVideo = String(mediaUrl).includes('.mp4') || String(mediaUrl).includes('video') || url.includes('/reel/');
                             let label = isVideo ? `Download Video ${mediaItems.length > 1 ? idx + 1 : ''}` : `Download Foto ${mediaItems.length > 1 ? idx + 1 : ''}`;
                             let icon = isVideo ? 'fa-video' : 'fa-image';
                             let ext = isVideo ? 'mp4' : 'jpg';
@@ -599,10 +529,10 @@
                                 </button>
                             `;
                         });
-                    } else { throw new Error(`Server ${currentServerMode} gagal merespons. Pilih Server Manual lainnya.`); }
+                    } else { throw new Error(`Server ${currentServerMode} gagal merespons.`); }
                 }
 
-                // ================= YOUTUBE (4 API AUTO + 1 CADANGAN SNAPINSTA/WIDIPE) =================
+                // ================= YOUTUBE =================
                 else if (currentPlatform === 'youtube') {
                     loadingText.innerText = `Ekstrak YT (${currentServerMode})...`;
                     
@@ -618,34 +548,25 @@
                     } catch(e) {}
 
                     let ytData = null;
-
                     let ytApis = [];
-                    if (currentServerMode === 'auto') {
-                        // Fitur Auto YT
+
+                    if (currentServerMode === 'cloud') {
+                        ytApis = [`https://api-cloud.my.id/youtube?url=${encodeURIComponent(cleanYtUrl)}`, `https://api-cloud.my.id/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`];
+                    } else if (currentServerMode === 'auto') {
                         ytApis = [
+                            `https://api-cloud.my.id/youtube?url=${encodeURIComponent(cleanYtUrl)}`,
                             `https://api.siputzx.my.id/api/d/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`,
-                            `https://api.agatz.xyz/api/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`,
-                            `https://api.vreden.web.id/api/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`,
-                            `https://api.ryzendesu.vip/api/downloader/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`
+                            `https://api.agatz.xyz/api/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`
                         ];
                     } else if (currentServerMode === 'siputzx') { ytApis = [`https://api.siputzx.my.id/api/d/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`]; } 
-                    else if (currentServerMode === 'agatz') { ytApis = [`https://api.agatz.xyz/api/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`]; } 
-                    else if (currentServerMode === 'vreden') { ytApis = [`https://api.vreden.web.id/api/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`]; } 
-                    else if (currentServerMode === 'ryzen') { ytApis = [`https://api.ryzendesu.vip/api/downloader/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`]; } 
-                    else if (currentServerMode === 'snapinsta') {
-                        // Karena SnapInsta fokus IG, kita pake API Widipe buat cadangan ultimate YouTube
-                        ytApis = [
-                            `https://widipe.com/download/ytdl?url=${encodeURIComponent(cleanYtUrl)}`,
-                            `https://api.davidcyriltech.my.id/youtube/mp4?url=${encodeURIComponent(cleanYtUrl)}`
-                        ];
-                    }
+                    else if (currentServerMode === 'agatz') { ytApis = [`https://api.agatz.xyz/api/ytmp4?url=${encodeURIComponent(cleanYtUrl)}`]; }
 
                     for (let endpoint of ytApis) {
                         try {
                             let res = await fetch(endpoint);
                             let json = await res.json();
                             
-                            let videoLink = json.result?.video || json.result?.url || json.result?.download?.url || json.data?.dl || json.url || json.data?.url;
+                            let videoLink = json.result?.video || json.result?.url || json.result?.download?.url || json.data?.dl || json.url;
                             let titleStr = json.result?.title || json.data?.title || json.title || 'YouTube Video';
                             let thumbImg = json.result?.thumbnail || json.data?.thumbnail || json.thumbnail || 'https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg';
 
@@ -668,7 +589,7 @@
                                 <span>Download Video MP4</span>
                             </a>
                         `;
-                    } else { throw new Error(`Server ${currentServerMode} gagal. Ganti server di bawah form URL dan coba lagi.`); }
+                    } else { throw new Error(`Server ${currentServerMode} gagal.`); }
                 }
 
                 isDataReady = true;
@@ -678,7 +599,7 @@
 
             } catch (error) {
                 console.error(error);
-                alert(error.message || 'Gagal tersambung ke server. Periksa link lu.');
+                alert(error.message || 'Gagal tersambung ke server.');
             } finally {
                 loadingBox.classList.add('hidden');
             }
