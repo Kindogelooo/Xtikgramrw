@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Xtikgram Downloader - Multi Cloud Stable Edition</title>
+    <title>Xtikgram Downloader - Final Fixed Edition</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -172,7 +172,7 @@
                             </div>
                         </div>
 
-                        <!-- TAB PEMILIH SERVER INSTAGRAM & YOUTUBE -->
+                        <!-- TAB PEMILIH SERVER INSTAGRAM -->
                         <div id="serverSelectorContainer" class="hidden space-y-2">
                             <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">Pilih Server Cloud API</label>
                             <div class="flex flex-nowrap space-x-2 overflow-x-auto pb-2 pr-6 hide-scrollbar w-full touch-pan-x items-center">
@@ -227,7 +227,7 @@
                         <div>
                             <h2 class="text-base font-bold text-slate-800">Xtikgram Downloader</h2>
                             <p class="text-xs text-slate-600 mt-1 font-medium leading-relaxed">
-                                Dilengkapi multi server cloud v1 & v2 anti bug foto/video.
+                                Final Clean Edition. Bebas bug [object Object] & 404.
                             </p>
                         </div>
                         <div class="pt-2 border-t border-slate-200/50">
@@ -450,7 +450,7 @@
                     } else { throw new Error('Link TikTok tidak valid.'); }
                 } 
                 
-                // ================= INSTAGRAM (Multi Server v1 & v2 - Maximize v2) =================
+                // ================= INSTAGRAM (Safe v2 & v1 Parser) =================
                 else if (currentPlatform === 'instagram') {
                     loadingText.innerText = `Scrape Instagram (${currentServerMode})...`;
                     let success = false, igData = null;
@@ -481,14 +481,13 @@
                     }
 
                     if (success && igData) {
-                        // Barbar Parser dioptimalkan untuk v2 & v1 agar array/objek foto/video tidak bug
                         let rawData = igData.data || igData.result || igData.url || igData;
                         let mediaItems = [];
 
                         if (Array.isArray(rawData)) {
                             mediaItems = rawData;
                         } else if (typeof rawData === 'object' && rawData !== null) {
-                            if (rawData.url || rawData.download_url || rawData.video || rawData.image) {
+                            if (rawData.url || rawData.download_url || rawData.video || rawData.image || typeof rawData === 'string') {
                                 mediaItems = [rawData];
                             } else {
                                 mediaItems = rawData.data || rawData.result || rawData.images || rawData.videos || [rawData];
@@ -500,20 +499,21 @@
                             document.getElementById('mediaDesc').innerText = igData.title || 'Instagram Content';
 
                             let firstObj = mediaItems[0];
-                            let firstItemUrl = firstObj.url || firstObj.download_url || firstObj.video || firstObj.image || firstObj;
+                            let firstItemUrl = typeof firstObj === 'string' ? firstObj : (firstObj.url || firstObj.download_url || firstObj.video || firstObj.image || '');
                             
-                            // Deteksi akurat foto atau video (berdasarkan ekstensi, tipe, atau URL)
                             let isVideo = String(firstItemUrl).includes('.mp4') || String(firstItemUrl).includes('video') || url.includes('/reel/') || firstObj.type === 'video';
                             
-                            if (isVideo) {
+                            if (isVideo && firstItemUrl) {
                                 setPreviewMode('video', firstItemUrl, firstObj.thumbnail || '');
-                            } else {
+                            } else if (firstItemUrl) {
                                 setPreviewMode('image', firstItemUrl);
                             }
 
                             actionList.innerHTML = '';
                             mediaItems.forEach((item, idx) => {
-                                let mediaUrl = item.url || item.download_url || item.video || item.image || item;
+                                let mediaUrl = typeof item === 'string' ? item : (item.url || item.download_url || item.video || item.image || '');
+                                if (!mediaUrl) return;
+                                
                                 let itemIsVideo = String(mediaUrl).includes('.mp4') || String(mediaUrl).includes('video') || url.includes('/reel/') || item.type === 'video';
                                 let label = itemIsVideo ? `Download Video ${mediaItems.length > 1 ? idx + 1 : ''}` : `Download Foto ${mediaItems.length > 1 ? idx + 1 : ''}`;
                                 let icon = itemIsVideo ? 'fa-video' : 'fa-image';
